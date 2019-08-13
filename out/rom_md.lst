@@ -1,4 +1,4 @@
- AS V1.42 Beta [Bld 118] - source file main.asm - page 1 - 8/12/2019 17:35:03
+ AS V1.42 Beta [Bld 118] - source file main.asm - page 1 - 8/12/2019 22:14:00
 
 
        1/       0 :                     ; ===========================================================================
@@ -797,7 +797,7 @@ MD RAM ends at: FFA08A
 (2)    3/       0 :                     ; Z80 Code
 (2)    4/       0 :                     ; ----------------------------------------------------------------
 (2)    5/       0 :                     
-(2)    6/       0 : =AH                 MAX_CHNLS	equ	10			; Only first 10 are used
+(2)    6/       0 : =AH                 MAX_CHNLS	equ	10			; Only the first 10 are used
 (2)    7/       0 : =2H                 MAX_TRACKS	equ	2
 (2)    8/       0 :                     
 (2)    9/       0 :                     ; --------------------------------------------------------
@@ -1223,7 +1223,7 @@ MD RAM ends at: FFA08A
 (2)  424/     272 : 23                  		inc	hl
 (2)  425/     273 : 4F                  		ld	c,a
 (2)  426/     274 : E6 3F               		and	00111111b
-(2)  427/     276 : 11 00 00            		ld	de,0		; size 20h
+(2)  427/     276 : 11 00 00            		ld	de,0			; size 20h
 (2)  428/     279 : 5F                  		ld	e,a
 (2)  429/     27A : E6 18               		and	00011000b
 (2)  430/     27C : 0F                  		rrca
@@ -1768,7 +1768,7 @@ MD RAM ends at: FFA08A
 (2)  969/     581 :                     ; -------------------------------------
 (2)  970/     581 :                     ; Set effects
 (2)  971/     581 :                     ; 
-(2)  972/     581 :                     ; sets to buffer only
+(2)  972/     581 :                     ; updates to buffer only
 (2)  973/     581 :                     ; -------------------------------------
 (2)  974/     581 :                     
 (2)  975/     581 :                     .set_effect:
@@ -1833,7 +1833,7 @@ MD RAM ends at: FFA08A
 (2) 1034/     5D9 :                     
 (2) 1035/     5D9 :                     .eff_B:
 (2) 1036/     5D9 : FD 71 0E            		ld	(iy+trck_BlockCurr),c
-(2) 1037/     5DC : 11 01 00            		ld	de,1
+(2) 1037/     5DC : 11 01 00            		ld	de,1			; Finish row
 (2) 1038/     5DF : FD 73 1A            		ld	(iy+trck_RowSteps),e
 (2) 1039/     5E2 : FD 72 1B            		ld	(iy+(trck_RowSteps+1)),d
 (2) 1040/     5E5 : FD 77 1E            		ld	(iy+trck_RowWait),a
@@ -1984,1581 +1984,1562 @@ MD RAM ends at: FFA08A
 (2) 1185/     68E : 40                  		db 040h		; 0C0h
 (2) 1186/     68F :                     
 (2) 1187/     68F :                     ; ---------------------------------------------
-(2) 1188/     68F :                     
-(2) 1189/     68F :                     .grab_instslot:
-(2) 1190/     68F : FD 6E 16            		ld	l,(iy+trck_Instr)
-(2) 1191/     692 : FD 66 17            		ld	h,(iy+(trck_Instr+1))
-(2) 1192/     695 : DD 7E 03            		ld	a,(ix+chnl_Ins)
-(2) 1193/     698 : 3D                  		dec 	a
-(2) 1194/     699 : 47                  		ld	b,a
-(2) 1195/     69A : 87                  		add 	a,a
-(2) 1196/     69B : 87                  		add 	a,a
-(2) 1197/     69C : 4F                  		ld	c,a
-(2) 1198/     69D : 78                  		ld	a,b
-(2) 1199/     69E : 07                  		rlca
-(2) 1200/     69F : 07                  		rlca
-(2) 1201/     6A0 : E6 03               		and	3
-(2) 1202/     6A2 : 47                  		ld	b,a
-(2) 1203/     6A3 : 09                  		add	hl,bc
-(2) 1204/     6A4 : C9                  		ret
-(2) 1205/     6A5 :                     
-(2) 1206/     6A5 :                     ; ---------------------------------------------
-(2) 1207/     6A5 :                     ; These routines send the result data to
-(2) 1208/     6A5 :                     ; their sound chips
-(2) 1209/     6A5 :                     ; ---------------------------------------------
+(2) 1188/     68F :                     ; Grab instrument from slot
+(2) 1189/     68F :                     ; 
+(2) 1190/     68F :                     ; Output
+(2) 1191/     68F :                     ; hl - current instrument
+(2) 1192/     68F :                     ; ---------------------------------------------
+(2) 1193/     68F :                     
+(2) 1194/     68F :                     .grab_instslot:
+(2) 1195/     68F : FD 6E 16            		ld	l,(iy+trck_Instr)
+(2) 1196/     692 : FD 66 17            		ld	h,(iy+(trck_Instr+1))
+(2) 1197/     695 : DD 7E 03            		ld	a,(ix+chnl_Ins)
+(2) 1198/     698 : 3D                  		dec 	a
+(2) 1199/     699 : 47                  		ld	b,a
+(2) 1200/     69A : 87                  		add 	a,a
+(2) 1201/     69B : 87                  		add 	a,a
+(2) 1202/     69C : 4F                  		ld	c,a
+(2) 1203/     69D : 78                  		ld	a,b
+(2) 1204/     69E : 07                  		rlca
+(2) 1205/     69F : 07                  		rlca
+(2) 1206/     6A0 : E6 03               		and	3
+(2) 1207/     6A2 : 47                  		ld	b,a
+(2) 1208/     6A3 : 09                  		add	hl,bc
+(2) 1209/     6A4 : C9                  		ret
 (2) 1210/     6A5 :                     
-(2) 1211/     6A5 :                     .run_frequency:
-(2) 1212/     6A5 : DD 46 0B            		ld	b,(ix+chnl_InsType)
-(2) 1213/     6A8 : DD 4E 00            		ld	c,(ix+chnl_Chip)
-(2) 1214/     6AB : 78                  		ld	a,b
-(2) 1215/     6AC : B7                  		or	a			; Type 080h/0E0h?
-(2) 1216/     6AD : F2 B5 06            		jp	p,.freqrn_not3
-(2) 1217/     6B0 : CB 79               		bit 	7,c			; PSG channel?
-(2) 1218/     6B2 : C2 2F 07            		jp	nz,.freqrn_psg
-(2) 1219/     6B5 :                     .freqrn_not3:
-(2) 1220/     6B5 : 78                  		ld	a,b
-(2) 1221/     6B6 : FE 02               		cp	2			; Type 2?
-(2) 1222/     6B8 : C2 C1 06            		jp	nz,.freqrn_fm
-(2) 1223/     6BB : 79                  		ld	a,c			; Channel 6?
-(2) 1224/     6BC : FE 06               		cp	6
-(2) 1225/     6BE : CA F1 06            		jp	z,.freqrn_smpl
-(2) 1226/     6C1 :                     .freqrn_fm:
-(2) 1227/     6C1 : DD 5E 00            		ld	e,(ix+chnl_Chip)
-(2) 1228/     6C4 : CB 7B               		bit	7,e
-(2) 1229/     6C6 : C0                  		ret	nz
-(2) 1230/     6C7 : 16 28               		ld	d,28h
-(2) 1231/     6C9 : CD 78 0B            		call	SndDrv_FmSet_1		; KEYS OFF
-(2) 1232/     6CC : DD 7E 02            		ld	a,(ix+chnl_Note)
-(2) 1233/     6CF : FE FE               		cp	-2
-(2) 1234/     6D1 : C8                  		ret	z
-(2) 1235/     6D2 : FE FF               		cp	-1
-(2) 1236/     6D4 : C8                  		ret	z
-(2) 1237/     6D5 : DD 66 0A            		ld	h,(ix+(chnl_Freq+1))	; Copy freq
-(2) 1238/     6D8 : DD 6E 09            		ld	l,(ix+chnl_Freq)
-(2) 1239/     6DB : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
-(2) 1240/     6DE : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
-(2) 1241/     6E1 : CD 4D 08            		call	.set_fm_freq
-(2) 1242/     6E4 : DD 5E 10            		ld	e,(ix+chnl_FmRegKeys)	; KEYS ON
-(2) 1243/     6E7 : DD 7E 00            		ld	a,(ix+chnl_Chip)
-(2) 1244/     6EA : B3                  		or	e
-(2) 1245/     6EB : 5F                  		ld	e,a
-(2) 1246/     6EC : 16 28               		ld	d,28h
-(2) 1247/     6EE : C3 78 0B            		jp	SndDrv_FmSet_1
-(2) 1248/     6F1 :                     
-(2) 1249/     6F1 :                     .freqrn_smpl:
-(2) 1250/     6F1 : 1E 40               		ld	e,040h
-(2) 1251/     6F3 : DD 7E 02            		ld	a,(ix+chnl_Note)
-(2) 1252/     6F6 : FE FE               		cp	-2
-(2) 1253/     6F8 : CA 2A 07            		jp	z,.set_smpflag
-(2) 1254/     6FB : FE FF               		cp	-1
-(2) 1255/     6FD : CA 2A 07            		jp	z,.set_smpflag
-(2) 1256/     700 : DD 66 08            		ld	h,(ix+(chnl_InsAddr+1))
-(2) 1257/     703 : DD 6E 07            		ld	l,(ix+chnl_InsAddr)
-(2) 1258/     706 : 7C                  		ld	a,h
-(2) 1259/     707 : B5                  		or	l
-(2) 1260/     708 : C8                  		ret	z
-(2) 1261/     709 :                     		
-(2) 1262/     709 :                     	; Play SAMPLE
-(2) 1263/     709 : 11 06 28            		ld	de,2806h
-(2) 1264/     70C : CD 78 0B            		call	SndDrv_FmSet_1
-(2) 1265/     70F : DD 66 0A            		ld	h,(ix+(chnl_Freq+1))		; Copy freq
-(2) 1266/     712 : DD 6E 09            		ld	l,(ix+chnl_Freq)
-(2) 1267/     715 : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
-(2) 1268/     718 : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
-(2) 1269/     71B : 7D                  		ld	a,l
-(2) 1270/     71C : 32 2D 00            		ld	(Sample_Speed),a
-(2) 1271/     71F : 7C                  		ld	a,h
-(2) 1272/     720 : 32 2E 00            		ld	(Sample_Speed+1),a
-(2) 1273/     723 : DD 7E 15            		ld	a,(ix+chnl_SmplFlags)
-(2) 1274/     726 : 07                  		rlca
-(2) 1275/     727 : F6 01               		or	1
-(2) 1276/     729 : 5F                  		ld	e,a
-(2) 1277/     72A :                     .set_smpflag:
-(2) 1278/     72A : 7B                  		ld	a,e
-(2) 1279/     72B : 32 1F 00            		ld	(Sample_Flags),a
-(2) 1280/     72E : C9                  		ret
-(2) 1281/     72F :                     .freqrn_psg:
-(2) 1282/     72F : DD 66 0A            		ld	h,(ix+(chnl_Freq+1))		; Copy freq
-(2) 1283/     732 : DD 6E 09            		ld	l,(ix+chnl_Freq)
-(2) 1284/     735 : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
-(2) 1285/     738 : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
-(2) 1286/     73B : C3 7E 09            		jp	.set_psg_freq
-(2) 1287/     73E :                     
-(2) 1288/     73E :                     ; ------------------------------------
-(2) 1289/     73E :                     ; Turn FM volume regs down
-(2) 1290/     73E :                     ; TL = 07Fh
-(2) 1291/     73E :                     ; 
-(2) 1292/     73E :                     ; ix - current channel
-(2) 1293/     73E :                     ; ------------------------------------
-(2) 1294/     73E :                     
-(2) 1295/     73E :                     .fm_turnoff:
-(2) 1296/     73E : DD 7E 00            		ld	a,(ix+chnl_Chip)
-(2) 1297/     741 : 4F                  		ld	c,a
-(2) 1298/     742 : FE 06               		cp	6
-(2) 1299/     744 : C2 54 07            		jp	nz,.not_dac
-(2) 1300/     747 : DD 7E 0B            		ld	a,(ix+chnl_InsType)
-(2) 1301/     74A : FE 02               		cp	2
-(2) 1302/     74C : C2 54 07            		jp	nz,.not_dac
-(2) 1303/     74F : 3E 40               		ld	a,40h
-(2) 1304/     751 : 32 1F 00            		ld	(Sample_Flags),a
-(2) 1305/     754 :                     .not_dac:
-(2) 1306/     754 : 79                  		ld	a,c
-(2) 1307/     755 : B7                  		or	a
-(2) 1308/     756 : F8                  		ret	m
-(2) 1309/     757 :                     		
-(2) 1310/     757 :                     .fm_settloff:
-(2) 1311/     757 : 5F                  		ld	e,a
-(2) 1312/     758 : 16 28               		ld	d,28h
-(2) 1313/     75A : CD 78 0B            		call	SndDrv_FmSet_1
-(2) 1314/     75D : 7B                  		ld	a,e
-(2) 1315/     75E : E6 03               		and	11b
-(2) 1316/     760 : F6 40               		or	40h
-(2) 1317/     762 : 1E 7F               		ld	e,7Fh
-(2) 1318/     764 : 57                  		ld	d,a
-(2) 1319/     765 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1320/     768 : 14                  		inc	d
-(2) 1321/     769 : 14                  		inc	d
-(2) 1322/     76A : 14                  		inc	d
-(2) 1323/     76B : 14                  		inc	d
-(2) 1324/     76C : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1325/     76F : 14                  		inc	d
-(2) 1326/     770 : 14                  		inc	d
-(2) 1327/     771 : 14                  		inc	d
-(2) 1328/     772 : 14                  		inc	d
-(2) 1329/     773 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1330/     776 : 14                  		inc	d
-(2) 1331/     777 : 14                  		inc	d
-(2) 1332/     778 : 14                  		inc	d
-(2) 1333/     779 : 14                  		inc	d
-(2) 1334/     77A : C3 71 0B            		jp	SndDrv_FmAutoSet
-(2) 1335/     77D :                     
-(2) 1336/     77D :                     ; ------------------------------------
-(2) 1337/     77D :                     ; FM normal registers
-(2) 1338/     77D :                     ; 
-(2) 1339/     77D :                     ; NOTE: call this first BEFORE
-(2) 1340/     77D :                     ; modyfing the volume
-(2) 1341/     77D :                     ; 
-(2) 1342/     77D :                     ; ix - current channel
-(2) 1343/     77D :                     ; ------------------------------------
-(2) 1344/     77D :                     
-(2) 1345/     77D :                     .set_fm_ins:
-(2) 1346/     77D : DD 4E 00            		ld	c,(ix+chnl_Chip)
-(2) 1347/     780 : DD 66 08            		ld	h,(ix+(chnl_InsAddr+1))
-(2) 1348/     783 : DD 6E 07            		ld	l,(ix+chnl_InsAddr)
-(2) 1349/     786 : 7C                  		ld	a,h
-(2) 1350/     787 : B5                  		or	l
-(2) 1351/     788 : C8                  		ret	z
-(2) 1352/     789 : 79                  		ld	a,c			; FM6?
-(2) 1353/     78A : FE 06               		cp	6
-(2) 1354/     78C : C2 9C 07            		jp	nz,.no_chnl6
-(2) 1355/     78F : DD 7E 0B            		ld	a,(ix+chnl_InsType)
-(2) 1356/     792 : FE 02               		cp	2			; Type 2?
-(2) 1357/     794 : CA 2E 09            		jp	z,.set_sampl
-(2) 1358/     797 : 3E 40               		ld	a,40h			; IF type != 2, stop sample to unlock FM6
-(2) 1359/     799 : 32 1F 00            		ld	(Sample_Flags),a
-(2) 1360/     79C :                     .no_chnl6:
-(2) 1361/     79C : 79                  		ld	a,c
-(2) 1362/     79D : E6 03               		and	11b
-(2) 1363/     79F : F6 30               		or	30h
-(2) 1364/     7A1 : 57                  		ld	d,a
-(2) 1365/     7A2 : 06 07               		ld	b,1Ch/4
-(2) 1366/     7A4 :                     .fmfiles:
-(2) 1367/     7A4 : 5E                  		ld	e,(hl)
-(2) 1368/     7A5 : 23                  		inc 	hl
-(2) 1369/     7A6 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1370/     7A9 : 14                  		inc 	d
-(2) 1371/     7AA : 14                  		inc 	d
-(2) 1372/     7AB : 14                  		inc 	d
-(2) 1373/     7AC : 14                  		inc 	d
-(2) 1374/     7AD : 5E                  		ld	e,(hl)
-(2) 1375/     7AE : 23                  		inc 	hl
-(2) 1376/     7AF : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1377/     7B2 : 14                  		inc 	d
-(2) 1378/     7B3 : 14                  		inc 	d
-(2) 1379/     7B4 : 14                  		inc 	d
-(2) 1380/     7B5 : 14                  		inc 	d
-(2) 1381/     7B6 : 5E                  		ld	e,(hl)
-(2) 1382/     7B7 : 23                  		inc 	hl
-(2) 1383/     7B8 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1384/     7BB : 14                  		inc 	d
-(2) 1385/     7BC : 14                  		inc 	d
-(2) 1386/     7BD : 14                  		inc 	d
-(2) 1387/     7BE : 14                  		inc 	d
-(2) 1388/     7BF : 5E                  		ld	e,(hl)
-(2) 1389/     7C0 : 23                  		inc 	hl
-(2) 1390/     7C1 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1391/     7C4 : 14                  		inc 	d
-(2) 1392/     7C5 : 14                  		inc 	d
-(2) 1393/     7C6 : 14                  		inc 	d
-(2) 1394/     7C7 : 14                  		inc 	d
-(2) 1395/     7C8 : 10 DA               		djnz	.fmfiles
-(2) 1396/     7CA :                     
-(2) 1397/     7CA : 16 B0               		ld	d,0B0h
-(2) 1398/     7CC : 79                  		ld	a,c
-(2) 1399/     7CD : E6 03               		and	11b
-(2) 1400/     7CF : B2                  		or	d
-(2) 1401/     7D0 : 57                  		ld	d,a
-(2) 1402/     7D1 : 5E                  		ld	e,(hl)			; 0B0h
-(2) 1403/     7D2 : DD 73 0E            		ld	(ix+chnl_FmRegB0),e
-(2) 1404/     7D5 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1405/     7D8 : 23                  		inc 	hl
-(2) 1406/     7D9 : 5E                  		ld	e,(hl)			; 0B4h
-(2) 1407/     7DA : 16 B4               		ld	d,0B4h
-(2) 1408/     7DC : 79                  		ld	a,c
-(2) 1409/     7DD : E6 03               		and	11b
-(2) 1410/     7DF : B2                  		or	d
-(2) 1411/     7E0 : 57                  		ld	d,a
-(2) 1412/     7E1 : 7E                  		ld	a,(hl)
-(2) 1413/     7E2 : DD 77 0F            		ld	(ix+chnl_FmRegB4),a	
-(2) 1414/     7E5 : DD B6 0D            		or	(ix+chnl_FmPan)		; FM panning
-(2) 1415/     7E8 : 5F                  		ld	e,a
-(2) 1416/     7E9 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1417/     7EC : 23                  		inc 	hl
-(2) 1418/     7ED : 5E                  		ld	e,(hl)			; FM3 flag
-(2) 1419/     7EE : 23                  		inc 	hl
-(2) 1420/     7EF : 7E                  		ld	a,(hl)			; 028h
-(2) 1421/     7F0 : 23                  		inc 	hl
-(2) 1422/     7F1 : DD 77 10            		ld	(ix+chnl_FmRegKeys),a
-(2) 1423/     7F4 :                     
-(2) 1424/     7F4 : 79                  		ld	a,c
-(2) 1425/     7F5 : FE 02               		cp	2			; Channel 3?
-(2) 1426/     7F7 : C0                  		ret	nz
-(2) 1427/     7F8 : 1E 00               		ld	e,0
-(2) 1428/     7FA : DD 7E 0B            		ld	a,(ix+chnl_InsType)
-(2) 1429/     7FD : FE 01               		cp	1			; Type 1?
-(2) 1430/     7FF : C2 48 08            		jp	nz,.set_fm3reg
-(2) 1431/     802 : 16 A6               		ld	d,0A6h			; OP1
-(2) 1432/     804 : 5E                  		ld	e,(hl)
-(2) 1433/     805 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1434/     808 : 23                  		inc 	hl
-(2) 1435/     809 : 16 A2               		ld	d,0A2h
-(2) 1436/     80B : 5E                  		ld	e,(hl)
-(2) 1437/     80C : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1438/     80F : 23                  		inc 	hl
-(2) 1439/     810 : 16 AC               		ld	d,0ACh			; OP2
-(2) 1440/     812 : 5E                  		ld	e,(hl)
-(2) 1441/     813 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1442/     816 : 23                  		inc 	hl
-(2) 1443/     817 : 16 A8               		ld	d,0A8h
-(2) 1444/     819 : 5E                  		ld	e,(hl)
-(2) 1445/     81A : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1446/     81D : 23                  		inc 	hl
-(2) 1447/     81E : 16 AD               		ld	d,0ADh			; OP3
-(2) 1448/     820 : 5E                  		ld	e,(hl)
-(2) 1449/     821 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1450/     824 : 23                  		inc 	hl
-(2) 1451/     825 : 16 A9               		ld	d,0A9h
-(2) 1452/     827 : 5E                  		ld	e,(hl)
-(2) 1453/     828 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1454/     82B : 23                  		inc 	hl
-(2) 1455/     82C : 16 AE               		ld	d,0AEh			; OP4
-(2) 1456/     82E : 5E                  		ld	e,(hl)
-(2) 1457/     82F : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1458/     832 : 23                  		inc 	hl
-(2) 1459/     833 : 16 AA               		ld	d,0AAh
-(2) 1460/     835 : 5E                  		ld	e,(hl)
-(2) 1461/     836 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1462/     839 : DD 5E 10            		ld	e,(ix+chnl_FmRegKeys)	; KEYS ON TODO checar esto
-(2) 1463/     83C : 79                  		ld	a,c
-(2) 1464/     83D : E6 07               		and	111b
-(2) 1465/     83F : B3                  		or	e
-(2) 1466/     840 : 5F                  		ld	e,a
-(2) 1467/     841 : 16 28               		ld	d,28h
-(2) 1468/     843 : CD 78 0B            		call	SndDrv_FmSet_1
-(2) 1469/     846 : 1E 40               		ld	e,40h
-(2) 1470/     848 :                     .set_fm3reg:
-(2) 1471/     848 : 16 27               		ld	d,27h
-(2) 1472/     84A : C3 78 0B            		jp	SndDrv_FmSet_1
-(2) 1473/     84D :                      
-(2) 1474/     84D :                     ; ------------------------------------
-(2) 1475/     84D :                     ; Set FM frequency
-(2) 1476/     84D :                     ; 
-(2) 1477/     84D :                     ; hl - frequency
-(2) 1478/     84D :                     ; ------------------------------------
-(2) 1479/     84D :                     
-(2) 1480/     84D :                     .set_fm_freq:
-(2) 1481/     84D : DD 56 00            		ld	d,(ix+chnl_Chip)
-(2) 1482/     850 : DD 5E 0B            		ld	e,(ix+chnl_InsType)
-(2) 1483/     853 : 7A                  		ld	a,d
-(2) 1484/     854 : FE 06               		cp	6			; Check channel 6
-(2) 1485/     856 : C2 5D 08            		jp	nz,.no_chnl6f
-(2) 1486/     859 : 7B                  		ld	a,e
-(2) 1487/     85A : FE 02               		cp	2
-(2) 1488/     85C : C8                  		ret	z
-(2) 1489/     85D :                     ; 		jp	z,.play_sampl
-(2) 1490/     85D :                     .no_chnl6f:
-(2) 1491/     85D : 7A                  		ld	a,d
-(2) 1492/     85E : FE 02               		cp	2			; Check channel 3
-(2) 1493/     860 : C2 67 08            		jp	nz,.no_chnl3f
-(2) 1494/     863 : 7B                  		ld	a,e
-(2) 1495/     864 : FE 01               		cp	1			; CH3 OP regs are already
-(2) 1496/     866 : C8                  		ret	z			; set from the instrument data
-(2) 1497/     867 :                     .no_chnl3f:
-(2) 1498/     867 :                     
-(2) 1499/     867 : 5A                  		ld	e,d
-(2) 1500/     868 : DD 7E 02            		ld	a,(ix+chnl_Note)
-(2) 1501/     86B : FE F6               		cp	-10
-(2) 1502/     86D : CA 78 08            		jp	z,.set_keycut
-(2) 1503/     870 : FE FF               		cp	-1
-(2) 1504/     872 : C8                  		ret	z
-(2) 1505/     873 : FE FE               		cp	-2
-(2) 1506/     875 : C2 7C 08            		jp	nz,.no_keycut
-(2) 1507/     878 :                     .set_keycut:
-(2) 1508/     878 : 7A                  		ld	a,d
-(2) 1509/     879 : C3 57 07            		jp	.fm_settloff
-(2) 1510/     87C :                     .no_keycut:
-(2) 1511/     87C : 7B                  		ld	a,e
-(2) 1512/     87D : E6 03               		and	11b
-(2) 1513/     87F : 47                  		ld	b,a
-(2) 1514/     880 : 3E A4               		ld	a,0A4h
-(2) 1515/     882 : B0                  		or	b
-(2) 1516/     883 : 57                  		ld	d,a
-(2) 1517/     884 : 5C                  		ld	e,h
-(2) 1518/     885 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1519/     888 : 15                  		dec 	d
-(2) 1520/     889 : 15                  		dec 	d
-(2) 1521/     88A : 15                  		dec	d
-(2) 1522/     88B : 15                  		dec 	d
-(2) 1523/     88C : 5D                  		ld	e,l
-(2) 1524/     88D : C3 71 0B            		jp	SndDrv_FmAutoSet
-(2) 1525/     890 :                     
-(2) 1526/     890 :                     ; TODO: checar porque puse esto
-(2) 1527/     890 :                     ; aqui en primer lugar
-(2) 1528/     890 :                     ; .play_sampl:
-(2) 1529/     890 :                     ; 		ld	a,(ix+chnl_Note)
-(2) 1530/     890 :                     ; 		ld	e,040h
-(2) 1531/     890 :                     ; 		cp	-1
-(2) 1532/     890 :                     ; 		jp	z,.set_smpflag
-(2) 1533/     890 :                     ; 		cp	-2
-(2) 1534/     890 :                     ; 		jp	z,.set_smpflag
-(2) 1535/     890 :                     ; 		cp	-10
-(2) 1536/     890 :                     ; 		jp	z,.set_smpflag
-(2) 1537/     890 :                     ; 		ld	h,(ix+(chnl_InsAddr+1))
-(2) 1538/     890 :                     ; 		ld	l,(ix+chnl_InsAddr)
-(2) 1539/     890 :                     ; 		ld	a,h
-(2) 1540/     890 :                     ; 		or	l
-(2) 1541/     890 :                     ; 		ret	z
-(2) 1542/     890 :                     ; 		ld	a,(ix+chnl_SmplFlags)
-(2) 1543/     890 :                     ; 		rlca
-(2) 1544/     890 :                     ; 		or	1
-(2) 1545/     890 :                     ; 		ld	e,a
-(2) 1546/     890 :                     ; .set_smpflag:
-(2) 1547/     890 :                     ; 		ld	a,e
-(2) 1548/     890 :                     ; 		ld	(Sample_Flags),a
-(2) 1549/     890 :                     ; 		ret
-(2) 1550/     890 :                     
-(2) 1551/     890 :                     ; ------------------------------------
-(2) 1552/     890 :                     ; Set FM Volume
-(2) 1553/     890 :                     ; 
-(2) 1554/     890 :                     ; This one might blow your mind
-(2) 1555/     890 :                     ; ------------------------------------
-(2) 1556/     890 :                     
-(2) 1557/     890 :                     .set_fm_vol:
-(2) 1558/     890 : DD 7E 00            		ld	a,(ix+chnl_Chip)
-(2) 1559/     893 : 5F                  		ld	e,a
-(2) 1560/     894 : FE 06               		cp	6
-(2) 1561/     896 : C2 9F 08            		jp	nz,.notdac
-(2) 1562/     899 : DD 7E 0B            		ld	a,(ix+chnl_InsType)
-(2) 1563/     89C : FE 02               		cp	2
-(2) 1564/     89E : C8                  		ret	z
-(2) 1565/     89F :                     .notdac:
-(2) 1566/     89F : DD 66 08            		ld	h,(ix+(chnl_InsAddr+1))
-(2) 1567/     8A2 : DD 6E 07            		ld	l,(ix+chnl_InsAddr)
-(2) 1568/     8A5 : 7C                  		ld	a,h
-(2) 1569/     8A6 : B5                  		or	l
-(2) 1570/     8A7 : C8                  		ret	z
-(2) 1571/     8A8 : 23                  		inc 	hl			; Skip 30h
-(2) 1572/     8A9 : 23                  		inc 	hl
-(2) 1573/     8AA : 23                  		inc 	hl
-(2) 1574/     8AB : 23                  		inc 	hl
-(2) 1575/     8AC : 78                  		ld	a,b
-(2) 1576/     8AD : FE 40               		cp	40h
-(2) 1577/     8AF : DA B4 08            		jp	c,.too_much
-(2) 1578/     8B2 : 3E 40               		ld	a,40h
-(2) 1579/     8B4 :                     .too_much:
-(2) 1580/     8B4 : B7                  		or	a
-(2) 1581/     8B5 : F2 B9 08            		jp	p,.too_low
-(2) 1582/     8B8 : AF                  		xor	a
-(2) 1583/     8B9 :                     .too_low:
-(2) 1584/     8B9 : D6 40               		sub 	a,40h
-(2) 1585/     8BB : 2F                  		cpl
-(2) 1586/     8BC : 3C                  		inc 	a
-(2) 1587/     8BD : DD 77 11            		ld	(ix+chnl_FmVolBase),a
-(2) 1588/     8C0 : DD 4E 11            		ld	c,(ix+chnl_FmVolBase)
-(2) 1589/     8C3 : 16 40               		ld	d,40h			; 40h
-(2) 1590/     8C5 : DD 7E 00            		ld	a,(ix+chnl_Chip)
-(2) 1591/     8C8 : E6 03               		and	11b
-(2) 1592/     8CA : B2                  		or	d
-(2) 1593/     8CB : 57                  		ld	d,a
-(2) 1594/     8CC : DD 7E 0E            		ld	a,(ix+chnl_FmRegB0)
-(2) 1595/     8CF : E6 07               		and	111b
-(2) 1596/     8D1 : 47                  		ld	b,a
-(2) 1597/     8D2 : FE 07               		cp	7
-(2) 1598/     8D4 : C2 E3 08            		jp	nz,.tl_lv1
-(2) 1599/     8D7 : 7E                  		ld	a,(hl)
-(2) 1600/     8D8 : 81                  		add 	a,c
-(2) 1601/     8D9 : B7                  		or	a
-(2) 1602/     8DA : F2 DF 08            		jp	p,.tl_lv1_tm
-(2) 1603/     8DD : 3E 7F               		ld	a,7Fh
-(2) 1604/     8DF :                     .tl_lv1_tm:
-(2) 1605/     8DF : 5F                  		ld	e,a
-(2) 1606/     8E0 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1607/     8E3 :                     .tl_lv1:
-(2) 1608/     8E3 : 23                  		inc 	hl
-(2) 1609/     8E4 : 14                  		inc 	d
-(2) 1610/     8E5 : 14                  		inc 	d
-(2) 1611/     8E6 : 14                  		inc 	d
-(2) 1612/     8E7 : 14                  		inc 	d
-(2) 1613/     8E8 : 78                  		ld	a,b
-(2) 1614/     8E9 : FE 07               		cp	7
-(2) 1615/     8EB : CA F8 08            		jp	z,.tl_lv2_ok
-(2) 1616/     8EE : FE 06               		cp	6
-(2) 1617/     8F0 : CA F8 08            		jp	z,.tl_lv2_ok
-(2) 1618/     8F3 : FE 05               		cp	5
-(2) 1619/     8F5 : C2 04 09            		jp	nz,.tl_lv2
-(2) 1620/     8F8 :                     .tl_lv2_ok:
-(2) 1621/     8F8 : 7E                  		ld	a,(hl)
-(2) 1622/     8F9 : 81                  		add 	a,c
-(2) 1623/     8FA : B7                  		or	a
-(2) 1624/     8FB : F2 00 09            		jp	p,.tl_lv2_tm
-(2) 1625/     8FE : 3E 7F               		ld	a,7Fh
-(2) 1626/     900 :                     .tl_lv2_tm:
-(2) 1627/     900 : 5F                  		ld	e,a
-(2) 1628/     901 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1629/     904 :                     .tl_lv2:
-(2) 1630/     904 : 23                  		inc 	hl
-(2) 1631/     905 : 14                  		inc 	d
-(2) 1632/     906 : 14                  		inc 	d
-(2) 1633/     907 : 14                  		inc 	d
-(2) 1634/     908 : 14                  		inc 	d
-(2) 1635/     909 : 78                  		ld	a,b
-(2) 1636/     90A : E6 04               		and	100b
-(2) 1637/     90C : B7                  		or	a
-(2) 1638/     90D : CA 1C 09            		jp	z,.tl_lv3
-(2) 1639/     910 : 7E                  		ld	a,(hl)
-(2) 1640/     911 : 81                  		add 	a,c
-(2) 1641/     912 : B7                  		or	a
-(2) 1642/     913 : F2 18 09            		jp	p,.tl_lv3_tm
-(2) 1643/     916 : 3E 7F               		ld	a,7Fh
-(2) 1644/     918 :                     .tl_lv3_tm:
-(2) 1645/     918 : 5F                  		ld	e,a
-(2) 1646/     919 : CD 71 0B            		call	SndDrv_FmAutoSet
-(2) 1647/     91C :                     .tl_lv3:
-(2) 1648/     91C : 23                  		inc 	hl
-(2) 1649/     91D : 14                  		inc 	d
-(2) 1650/     91E : 14                  		inc 	d
-(2) 1651/     91F : 14                  		inc 	d
-(2) 1652/     920 : 14                  		inc 	d
-(2) 1653/     921 : 7E                  		ld	a,(hl)
-(2) 1654/     922 : 81                  		add 	a,c
-(2) 1655/     923 : B7                  		or	a
-(2) 1656/     924 : F2 29 09            		jp	p,.tl_lv4_tm
-(2) 1657/     927 : 3E 7F               		ld	a,7Fh
-(2) 1658/     929 :                     .tl_lv4_tm:
-(2) 1659/     929 : 5F                  		ld	e,a
-(2) 1660/     92A : 23                  		inc 	hl
-(2) 1661/     92B : C3 71 0B            		jp	SndDrv_FmAutoSet
-(2) 1662/     92E :                     
-(2) 1663/     92E :                     ; ------------------------------------
-(2) 1664/     92E :                     
-(2) 1665/     92E :                     .set_sampl:
-(2) 1666/     92E : DD 66 08            		ld	h,(ix+(chnl_InsAddr+1))
-(2) 1667/     931 : DD 6E 07            		ld	l,(ix+chnl_InsAddr)
-(2) 1668/     934 :                     
-(2) 1669/     934 : 5E                  		ld	e,(hl)
-(2) 1670/     935 : 23                  		inc 	hl
-(2) 1671/     936 : 56                  		ld	d,(hl)
-(2) 1672/     937 : 23                  		inc 	hl
-(2) 1673/     938 : 7E                  		ld	a,(hl)
-(2) 1674/     939 : 23                  		inc 	hl
-(2) 1675/     93A : ED 53 24 00         		ld	(Sample_Start),de
-(2) 1676/     93E : 32 26 00            		ld	(Sample_Start+2),a
-(2) 1677/     941 :                     
-(2) 1678/     941 : 5E                  		ld	e,(hl)
-(2) 1679/     942 : 23                  		inc 	hl
-(2) 1680/     943 : 56                  		ld	d,(hl)
-(2) 1681/     944 : 23                  		inc 	hl
-(2) 1682/     945 : 7E                  		ld	a,(hl)
-(2) 1683/     946 : 23                  		inc 	hl
-(2) 1684/     947 : ED 53 27 00         		ld	(Sample_End),de
-(2) 1685/     94B : 32 29 00            		ld	(Sample_End+2),a
-(2) 1686/     94E :                     		
-(2) 1687/     94E : 5E                  		ld	e,(hl)
-(2) 1688/     94F : 23                  		inc 	hl
-(2) 1689/     950 : 56                  		ld	d,(hl)
-(2) 1690/     951 : 23                  		inc 	hl
-(2) 1691/     952 : 7E                  		ld	a,(hl)
-(2) 1692/     953 : 23                  		inc 	hl
-(2) 1693/     954 : ED 53 2A 00         		ld	(Sample_Loop),de
-(2) 1694/     958 : 32 2C 00            		ld	(Sample_Loop+2),a
-(2) 1695/     95B :                     		
-(2) 1696/     95B : 7E                  		ld	a,(hl)
-(2) 1697/     95C : DD 77 15            		ld	(ix+chnl_SmplFlags),a
-(2) 1698/     95F : C9                  		ret
-(2) 1699/     960 :                     		
-(2) 1700/     960 :                     ; --------------------------------------------
-(2) 1701/     960 :                     ; Set PSG Volume
-(2) 1702/     960 :                     ; --------------------------------------------
-(2) 1703/     960 :                     
-(2) 1704/     960 :                     .set_psg_vol:
-(2) 1705/     960 : 1E 00               		ld	e,0
-(2) 1706/     962 : FE 40               		cp	40h
-(2) 1707/     964 : DA 69 09            		jp	c,.pntoo_much
-(2) 1708/     967 : 3E 40               		ld	a,40h
-(2) 1709/     969 :                     .pntoo_much:
-(2) 1710/     969 : B7                  		or	a
-(2) 1711/     96A : F2 6E 09            		jp	p,.pntoo_low
-(2) 1712/     96D : AF                  		xor	a
-(2) 1713/     96E :                     .pntoo_low:
-(2) 1714/     96E : FE 40               		cp	40h
-(2) 1715/     970 : CA 7A 09            		jp	z,.pntoppsgv
-(2) 1716/     973 : 3D                  		dec 	a
-(2) 1717/     974 : 0F                  		rrca
-(2) 1718/     975 : 0F                  		rrca
-(2) 1719/     976 : 2F                  		cpl
-(2) 1720/     977 : E6 0F               		and	00001111b
-(2) 1721/     979 : 5F                  		ld	e,a
-(2) 1722/     97A :                     .pntoppsgv:
-(2) 1723/     97A : DD 73 12            		ld	(ix+chnl_PsgVolBase),e
-(2) 1724/     97D : C9                  		ret
-(2) 1725/     97E :                     
-(2) 1726/     97E :                     ; --------------------------------------------
-(2) 1727/     97E :                     ; Set PSG Frequency
-(2) 1728/     97E :                     ; 
-(2) 1729/     97E :                     ; hl - frequency
-(2) 1730/     97E :                     ; --------------------------------------------
-(2) 1731/     97E :                     
-(2) 1732/     97E :                     .set_psg_freq:
-(2) 1733/     97E : DD 7E 00            		ld	a,(ix+chnl_Chip)
-(2) 1734/     981 : E6 E0               		and	11100000b
-(2) 1735/     983 : 47                  		ld	b,a
-(2) 1736/     984 : FE C0               		cp	0C0h
-(2) 1737/     986 : C2 91 09            		jp	nz,.not_nse3
-(2) 1738/     989 : FD 7E 0C            		ld	a,(iy+trck_PsgNoise)
-(2) 1739/     98C : E6 03               		and	3
-(2) 1740/     98E : FE 03               		cp	3
-(2) 1741/     990 : C8                  		ret	z
-(2) 1742/     991 :                     .not_nse3:
-(2) 1743/     991 : 78                  		ld	a,b
-(2) 1744/     992 : FE E0               		cp	0E0h
-(2) 1745/     994 : C2 A1 09            		jp	nz,.not_nse
-(2) 1746/     997 : DD 7E 0B            		ld	a,(ix+chnl_InsType)
-(2) 1747/     99A : E6 03               		and	011b
-(2) 1748/     99C : FE 03               		cp	3
-(2) 1749/     99E : C0                  		ret	nz
-(2) 1750/     99F : 06 C0               		ld	b,0C0h
-(2) 1751/     9A1 :                     .not_nse:
-(2) 1752/     9A1 : 7C                  		ld	a,h
-(2) 1753/     9A2 : B5                  		or	l
-(2) 1754/     9A3 : C8                  		ret	z
-(2) 1755/     9A4 :                     		
-(2) 1756/     9A4 : 7D                  		ld	a,l
-(2) 1757/     9A5 : 57                  		ld	d,a
-(2) 1758/     9A6 : E6 0F               		and 	00001111b
-(2) 1759/     9A8 : B0                  		or	b
-(2) 1760/     9A9 : 5F                  		ld	e,a
-(2) 1761/     9AA : 7D                  		ld	a,l
-(2) 1762/     9AB : 0F                  		rrca
-(2) 1763/     9AC : 0F                  		rrca
-(2) 1764/     9AD : 0F                  		rrca
-(2) 1765/     9AE : 0F                  		rrca
-(2) 1766/     9AF : E6 0F               		and	00001111b
-(2) 1767/     9B1 : 57                  		ld	d,a
-(2) 1768/     9B2 : 7C                  		ld	a,h
-(2) 1769/     9B3 : 0F                  		rrca
-(2) 1770/     9B4 : 0F                  		rrca
-(2) 1771/     9B5 : 0F                  		rrca
-(2) 1772/     9B6 : 0F                  		rrca
-(2) 1773/     9B7 : E6 30               		and	00110000b
-(2) 1774/     9B9 : B2                  		or	d
-(2) 1775/     9BA : DD 77 1D            		ld	(ix+(chnl_PsgOutFreq+1)),a
-(2) 1776/     9BD : DD 73 1C            		ld	(ix+chnl_PsgOutFreq),e
-(2) 1777/     9C0 : C9                  		ret
-(2) 1778/     9C1 :                     
-(2) 1779/     9C1 :                     ; --------------------------------
-(2) 1780/     9C1 :                     ; Run effects
-(2) 1781/     9C1 :                     ; 
-(2) 1782/     9C1 :                     ; apply effects on the channels
-(2) 1783/     9C1 :                     ; if unlocked
-(2) 1784/     9C1 :                     ; --------------------------------
-(2) 1785/     9C1 :                     
-(2) 1786/     9C1 :                     .run_effect:
-(2) 1787/     9C1 : 11 00 00            		ld	de,0
-(2) 1788/     9C4 : DD 7E 05            		ld	a,(ix+chnl_EffId)
-(2) 1789/     9C7 : 87                  		add 	a,a
-(2) 1790/     9C8 : E6 FE               		and	11111110b
-(2) 1791/     9CA : 5F                  		ld	e,a
-(2) 1792/     9CB : 21 DA 09            		ld	hl,.list_doeff
-(2) 1793/     9CE : 19                  		add	hl,de
-(2) 1794/     9CF : DD 46 00            		ld	b,(ix+chnl_Chip)
-(2) 1795/     9D2 : DD 4E 06            		ld	c,(ix+chnl_EffArg)
-(2) 1796/     9D5 : 7E                  		ld	a,(hl)
-(2) 1797/     9D6 : 23                  		inc	hl
-(2) 1798/     9D7 : 66                  		ld	h,(hl)
-(2) 1799/     9D8 : 6F                  		ld	l,a
-(2) 1800/     9D9 : E9                  		jp	(hl)
-(2) 1801/     9DA :                     .list_doeff:
-(2) 1802/     9DA : 9A 05               		dw .eff_null
-(2) 1803/     9DC : 9A 05               		dw .eff_null	; A | Set ticks
-(2) 1804/     9DE : 9A 05               		dw .eff_null	; B | Jump to block
-(2) 1805/     9E0 : 9A 05               		dw .eff_null	; C | Break to row (not possible here)
-(2) 1806/     9E2 : 10 0A               		dw .set_D	; D | Volume slide
-(2) 1807/     9E4 : 2A 0A               		dw .set_E_F	; E
-(2) 1808/     9E6 : 2A 0A               		dw .set_E_F	; F
-(2) 1809/     9E8 : 9A 05               		dw .eff_null	; G
-(2) 1810/     9EA : 9A 05               		dw .eff_null	; H
-(2) 1811/     9EC : 9A 05               		dw .eff_null	; I
-(2) 1812/     9EE : 9A 05               		dw .eff_null	; J	
-(2) 1813/     9F0 : 9A 05               		dw .eff_null	; K
-(2) 1814/     9F2 : 9A 05               		dw .eff_null	; L
-(2) 1815/     9F4 : 9A 05               		dw .eff_null	; M
-(2) 1816/     9F6 : 9A 05               		dw .eff_null	; N
-(2) 1817/     9F8 : 9A 05               		dw .eff_null	; O
-(2) 1818/     9FA : 9A 05               		dw .eff_null	; P
-(2) 1819/     9FC : 9A 05               		dw .eff_null	; Q
-(2) 1820/     9FE : 9A 05               		dw .eff_null	; R
-(2) 1821/     A00 : 9A 05               		dw .eff_null	; S
-(2) 1822/     A02 : 9A 05               		dw .eff_null	; T
-(2) 1823/     A04 : 9A 05               		dw .eff_null	; U
-(2) 1824/     A06 : 9A 05               		dw .eff_null	; V
-(2) 1825/     A08 : 9A 05               		dw .eff_null	; W
-(2) 1826/     A0A : 65 0A               		dw .set_X	; X
-(2) 1827/     A0C : 9A 05               		dw .eff_null	; Y
-(2) 1828/     A0E : 9A 05               		dw .eff_null	; Z
-(2) 1829/     A10 :                     
-(2) 1830/     A10 :                     ; ------------------------------------
-(2) 1831/     A10 :                     ; Effect D - Volume slide
-(2) 1832/     A10 :                     ; ------------------------------------
-(2) 1833/     A10 :                     
-(2) 1834/     A10 :                     .set_D:
-(2) 1835/     A10 : DD 7E 17            		ld	a,(ix+chnl_EfNewVol)
-(2) 1836/     A13 : DD 86 16            		add 	a,(ix+chnl_EfVolSlide)
-(2) 1837/     A16 : DD 77 17            		ld	(ix+chnl_EfNewVol),a
-(2) 1838/     A19 : CB 78               		bit	7,b
-(2) 1839/     A1B : C2 24 0A            		jp	nz,.setpsg_vol
-(2) 1840/     A1E : DD 46 17            		ld	b,(ix+chnl_EfNewVol)
-(2) 1841/     A21 : C3 90 08            		jp	.set_fm_vol
-(2) 1842/     A24 :                     .setpsg_vol:
-(2) 1843/     A24 : DD 7E 17            		ld	a,(ix+chnl_EfNewVol)
-(2) 1844/     A27 : C3 60 09            		jp	.set_psg_vol
-(2) 1845/     A2A :                     
-(2) 1846/     A2A :                     ; ------------------------------------
-(2) 1847/     A2A :                     ; Effect E - Portametro down
-(2) 1848/     A2A :                     ; ------------------------------------
-(2) 1849/     A2A :                     
-(2) 1850/     A2A :                     .set_E_F:
-(2) 1851/     A2A : DD CB 00 7E         		bit	7,(ix+chnl_Chip)
-(2) 1852/     A2E : C2 47 0A            		jp	nz,.psg_EF
-(2) 1853/     A31 :                     		
-(2) 1854/     A31 : DD 56 19            		ld	d,(ix+(chnl_EfPortam+1))
-(2) 1855/     A34 : DD 5E 18            		ld	e,(ix+chnl_EfPortam)
-(2) 1856/     A37 : DD 66 1B            		ld	h,(ix+(chnl_EfNewFreq+1))
-(2) 1857/     A3A : DD 6E 1A            		ld	l,(ix+chnl_EfNewFreq)
-(2) 1858/     A3D : 19                  		add 	hl,de
-(2) 1859/     A3E : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
-(2) 1860/     A41 : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
-(2) 1861/     A44 : C3 4D 08            		jp	.set_fm_freq
-(2) 1862/     A47 :                     
-(2) 1863/     A47 :                     .psg_EF:
-(2) 1864/     A47 : DD 56 19            		ld	d,(ix+(chnl_EfPortam+1))
-(2) 1865/     A4A : DD 5E 18            		ld	e,(ix+chnl_EfPortam)
-(2) 1866/     A4D : DD 66 1B            		ld	h,(ix+(chnl_EfNewFreq+1))
-(2) 1867/     A50 : DD 6E 1A            		ld	l,(ix+chnl_EfNewFreq)
-(2) 1868/     A53 : 37                  		scf
-(2) 1869/     A54 : ED 52               		sbc 	hl,de
-(2) 1870/     A56 : F2 5C 0A            		jp	p,.toolow
-(2) 1871/     A59 : 21 00 00            		ld	hl,0
-(2) 1872/     A5C :                     .toolow:
-(2) 1873/     A5C : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
-(2) 1874/     A5F : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
-(2) 1875/     A62 : C3 7E 09            		jp	.set_psg_freq
-(2) 1876/     A65 :                     		
-(2) 1877/     A65 :                     ; ------------------------------------
-(2) 1878/     A65 :                     ; Effect X - Set panning (FM ONLY)
-(2) 1879/     A65 :                     ; ------------------------------------
-(2) 1880/     A65 :                     
-(2) 1881/     A65 :                     .set_X:
-(2) 1882/     A65 : 16 B4               		ld	d,0B4h
-(2) 1883/     A67 : DD 7E 00            		ld	a,(ix+chnl_Chip)
-(2) 1884/     A6A : E6 03               		and	11b
-(2) 1885/     A6C : B2                  		or	d
-(2) 1886/     A6D : 57                  		ld	d,a
-(2) 1887/     A6E : DD 7E 0F            		ld	a,(ix+chnl_FmRegB4)
-(2) 1888/     A71 : DD B6 0D            		or	(ix+chnl_FmPan)
-(2) 1889/     A74 : 5F                  		ld	e,a
-(2) 1890/     A75 : C3 71 0B            		jp	SndDrv_FmAutoSet
-(2) 1891/     A78 :                     
-(2) 1892/     A78 :                     ; ===================================================================
-(2) 1893/     A78 :                     ; ----------------------------------------------------
-(2) 1894/     A78 :                     ; Subs
-(2) 1895/     A78 :                     ; ----------------------------------------------------
-(2) 1896/     A78 :                     
-(2) 1897/     A78 :                     ; ------------------------------------
-(2) 1898/     A78 :                     ; Track request
-(2) 1899/     A78 :                     ; ------------------------------------
-(2) 1900/     A78 :                     
-(2) 1901/     A78 :                     SndDrv_ReqTrack:
-(2) 1902/     A78 : FD 7E 0A            		ld	a,(iy+trck_ReqFlag)
-(2) 1903/     A7B : FD 36 0A 00         		ld	(iy+trck_ReqFlag),0
-(2) 1904/     A7F : FD 36 0C E0         		ld	(iy+trck_PsgNoise),0E0h
-(2) 1905/     A83 : 07                  		rlca
-(2) 1906/     A84 : E6 FE               		and	11111110b
-(2) 1907/     A86 : 11 00 00            		ld	de,0
-(2) 1908/     A89 : 5F                  		ld	e,a
-(2) 1909/     A8A : 21 93 0A            		ld	hl,.req_list
-(2) 1910/     A8D : 19                  		add	hl,de
-(2) 1911/     A8E : 7E                  		ld	a,(hl)
-(2) 1912/     A8F : 23                  		inc	hl
-(2) 1913/     A90 : 66                  		ld	h,(hl)
-(2) 1914/     A91 : 6F                  		ld	l,a
-(2) 1915/     A92 : E9                  		jp	(hl)
-(2) 1916/     A93 :                     .req_list:
-(2) 1917/     A93 : 00 00               		dw 0
-(2) 1918/     A95 : 99 0A               		dw .req01
-(2) 1919/     A97 : F2 0A               		dw .req02
-(2) 1920/     A99 :                     
-(2) 1921/     A99 :                     ; ------------------------------------
-(2) 1922/     A99 :                     ; Flag 01h
-(2) 1923/     A99 :                     ; ------------------------------------
-(2) 1924/     A99 :                     
-(2) 1925/     A99 :                     .req01:
-(2) 1926/     A99 : FD 46 00            		ld	b,(iy+trck_ReqBlk)		; Copy addresses
-(2) 1927/     A9C : FD 4E 01            		ld	c,(iy+(trck_ReqBlk+1))
-(2) 1928/     A9F : FD 56 02            		ld	d,(iy+trck_ReqPatt)
-(2) 1929/     AA2 : FD 5E 03            		ld	e,(iy+(trck_ReqPatt+1))
-(2) 1930/     AA5 : FD 66 04            		ld	h,(iy+trck_ReqIns)
-(2) 1931/     AA8 : FD 6E 05            		ld	l,(iy+(trck_ReqIns+1))
-(2) 1932/     AAB : FD 70 12            		ld	(iy+trck_Blocks),b
-(2) 1933/     AAE : FD 71 13            		ld	(iy+(trck_Blocks+1)),c
-(2) 1934/     AB1 : FD 72 14            		ld	(iy+trck_PattBase),d
-(2) 1935/     AB4 : FD 73 15            		ld	(iy+(trck_PattBase+1)),e
-(2) 1936/     AB7 : FD 72 18            		ld	(iy+trck_PattRead),d
-(2) 1937/     ABA : FD 73 19            		ld	(iy+(trck_PattRead+1)),e
-(2) 1938/     ABD : FD 74 16            		ld	(iy+trck_Instr),h
-(2) 1939/     AC0 : FD 75 17            		ld	(iy+(trck_Instr+1)),l
-(2) 1940/     AC3 : FD 56 06            		ld	d,(iy+trck_ReqTicks)		; Tempo and ticks
-(2) 1941/     AC6 : FD 4E 07            		ld	c,(iy+trck_ReqTempo)
-(2) 1942/     AC9 : FD 46 08            		ld	b,(iy+trck_ReqCurrBlk)
-(2) 1943/     ACC : FD 7E 09            		ld	a,(iy+trck_ReqSndBnk)
-(2) 1944/     ACF : FD 72 1F            		ld	(iy+trck_TicksCurr),d
-(2) 1945/     AD2 : FD 72 1C            		ld	(iy+trck_TicksMain),d
-(2) 1946/     AD5 : FD 72 0D            		ld	(iy+trck_TicksRead),d
-(2) 1947/     AD8 : FD 71 1D            		ld	(iy+trck_TempoBits),c
-(2) 1948/     ADB : FD 70 0E            		ld	(iy+trck_BlockCurr),b
-(2) 1949/     ADE : 32 32 00            		ld	(curr_SndBank),a
-(2) 1950/     AE1 : AF                  		xor	a
-(2) 1951/     AE2 : FD 77 1A            		ld	(iy+trck_RowSteps),a
-(2) 1952/     AE5 : FD 77 1B            		ld	(iy+(trck_RowSteps+1)),a		
-(2) 1953/     AE8 : FD 77 1E            		ld	(iy+trck_RowWait),a
-(2) 1954/     AEB : 3C                  		inc 	a
-(2) 1955/     AEC : FD 77 11            		ld	(iy+trck_Active),a
-(2) 1956/     AEF : C3 F6 0A            		jp	SndDrv_ResetChan
-(2) 1957/     AF2 :                     		
-(2) 1958/     AF2 :                     ; ------------------------------------
-(2) 1959/     AF2 :                     ; Flag 02h
-(2) 1960/     AF2 :                     ; ------------------------------------
-(2) 1961/     AF2 :                     
-(2) 1962/     AF2 :                     .req02:
-(2) 1963/     AF2 : AF                  		xor	a
-(2) 1964/     AF3 : FD 77 11            		ld	(iy+trck_Active),a
-(2) 1965/     AF6 :                     
-(2) 1966/     AF6 :                     ; ------------------------------------
-(2) 1967/     AF6 :                     ; Reset channels and silence them
-(2) 1968/     AF6 :                     ; ------------------------------------
-(2) 1969/     AF6 :                     
-(2) 1970/     AF6 :                     SndDrv_ResetChan:
-(2) 1971/     AF6 : 21 F0 10            		ld	hl,SndBuff_UsedChnls
-(2) 1972/     AF9 : FD 7E 10            		ld	a,(iy+trck_Priority)
-(2) 1973/     AFC : B7                  		or	a
-(2) 1974/     AFD : CA 03 0B            		jp	z,.lowprio
-(2) 1975/     B00 : 21 04 11            		ld	hl,SndBuff_UsedChnls_2
-(2) 1976/     B03 :                     .lowprio:
-(2) 1977/     B03 : 06 0A               		ld	b,MAX_CHNLS
-(2) 1978/     B05 : AF                  		xor	a
-(2) 1979/     B06 :                     .nexttype:
-(2) 1980/     B06 : 77                  		ld	(hl),a
-(2) 1981/     B07 : 23                  		inc 	hl
-(2) 1982/     B08 : 10 FC               		djnz	.nexttype
-(2) 1983/     B0A : DD E5               		push	ix
-(2) 1984/     B0C : 06 0A               		ld	b,MAX_CHNLS
-(2) 1985/     B0E : AF                  		xor	a
-(2) 1986/     B0F : 11 20 00            		ld	de,20h
-(2) 1987/     B12 :                     .initchnls:
-(2) 1988/     B12 : DD 36 01 00         		ld	(ix+chnl_Type),0		; Note request
-(2) 1989/     B16 : DD 36 02 FE         		ld	(ix+chnl_Note),-2		; Set Note off
-(2) 1990/     B1A : DD 36 04 40         		ld	(ix+chnl_Vol),64		; Max volume
-(2) 1991/     B1E : DD 36 17 40         		ld	(ix+chnl_EfNewVol),64
-(2) 1992/     B22 : DD 36 0D C0         		ld	(ix+chnl_FmPan),0C0h
-(2) 1993/     B26 : DD 77 0B            		ld	(ix+chnl_InsType),a
-(2) 1994/     B29 : DD 77 0C            		ld	(ix+chnl_InsOpt),a
-(2) 1995/     B2C : DD 77 16            		ld	(ix+chnl_EfVolSlide),a
-(2) 1996/     B2F : DD 77 13            		ld	(ix+chnl_PsgVolEnv),a
-(2) 1997/     B32 : DD 77 14            		ld	(ix+chnl_PsgIndx),a
-(2) 1998/     B35 : DD 19               		add 	ix,de
-(2) 1999/     B37 : 10 D9               		djnz	.initchnls
-(2) 2000/     B39 : DD E1               		pop	ix
-(2) 2001/     B3B :                     		
-(2) 2002/     B3B :                     ; ------------------------------------
-(2) 2003/     B3B :                     
-(2) 2004/     B3B : DD E5               		push	ix
-(2) 2005/     B3D : 11 04 11            		ld	de,SndBuff_UsedChnls_2
-(2) 2006/     B40 : 21 F0 10            		ld	hl,SndBuff_UsedChnls
-(2) 2007/     B43 : 06 0A               		ld	b,MAX_CHNLS			; FM channels
-(2) 2008/     B45 :                     .nxtfmchnl:
-(2) 2009/     B45 : C5                  		push	bc
-(2) 2010/     B46 : 1A                  		ld	a,(de)
-(2) 2011/     B47 : 4E                  		ld	c,(hl)
-(2) 2012/     B48 : B1                  		or	c
-(2) 2013/     B49 : B7                  		or	a
-(2) 2014/     B4A : C2 64 0B            		jp	nz,.dontvolfm
-(2) 2015/     B4D : DD 7E 00            		ld	a,(ix+chnl_Chip)
-(2) 2016/     B50 : B7                  		or	a
-(2) 2017/     B51 : F2 5C 0B            		jp	p,.fm_shut
-(2) 2018/     B54 : F6 1F               		or	01Fh
-(2) 2019/     B56 : 32 11 7F            		ld	(zpsg_ctrl),a
-(2) 2020/     B59 : C3 64 0B            		jp	.dontvolfm
-(2) 2021/     B5C :                     .fm_shut:
-(2) 2022/     B5C : D5                  		push 	de
-(2) 2023/     B5D : 16 28               		ld	d,28h
-(2) 2024/     B5F : 5F                  		ld	e,a
-(2) 2025/     B60 : CD 78 0B            		call	SndDrv_FmSet_1
-(2) 2026/     B63 : D1                  		pop	de
-(2) 2027/     B64 :                     .dontvolfm:
-(2) 2028/     B64 : 23                  		inc 	hl
-(2) 2029/     B65 : 13                  		inc 	de
-(2) 2030/     B66 : 01 20 00            		ld	bc,20h
-(2) 2031/     B69 : DD 09               		add 	ix,bc
-(2) 2032/     B6B : C1                  		pop	bc
-(2) 2033/     B6C : 10 D7               		djnz	.nxtfmchnl
-(2) 2034/     B6E : DD E1               		pop	ix
-(2) 2035/     B70 : C9                  		ret
-(2) 2036/     B71 :                     
-(2) 2037/     B71 :                     ; ---------------------------------------------
-(2) 2038/     B71 :                     ; FM send registers
-(2) 2039/     B71 :                     ; 
-(2) 2040/     B71 :                     ; Input:
-(2) 2041/     B71 :                     ; d - ctrl
-(2) 2042/     B71 :                     ; e - data
-(2) 2043/     B71 :                     ; c - channel
-(2) 2044/     B71 :                     ; ---------------------------------------------
-(2) 2045/     B71 :                     
-(2) 2046/     B71 :                     SndDrv_FmAutoSet:
-(2) 2047/     B71 : DD CB 00 56         		bit 	2,(ix+chnl_Chip)
-(2) 2048/     B75 : C2 83 0B            		jp	nz,SndDrv_FmSet_2
-(2) 2049/     B78 :                     		
-(2) 2050/     B78 :                     SndDrv_FmSet_1:
-(2) 2051/     B78 : 7A                  		ld	a,d
-(2) 2052/     B79 : 32 00 40            		ld	(Zym_ctrl_1),a
-(2) 2053/     B7C : 00                  		nop
-(2) 2054/     B7D : 7B                  		ld	a,e
-(2) 2055/     B7E : 32 01 40            		ld	(Zym_data_1),a
-(2) 2056/     B81 : 00                  		nop
-(2) 2057/     B82 : C9                  		ret
-(2) 2058/     B83 :                     
-(2) 2059/     B83 :                     SndDrv_FmSet_2:
-(2) 2060/     B83 : 7A                  		ld	a,d
-(2) 2061/     B84 : 32 02 40            		ld	(Zym_ctrl_2),a
-(2) 2062/     B87 : 00                  		nop
-(2) 2063/     B88 : 7B                  		ld	a,e
-(2) 2064/     B89 : 32 03 40            		ld	(Zym_data_2),a
-(2) 2065/     B8C : 00                  		nop
-(2) 2066/     B8D : C9                  		ret
-(2) 2067/     B8E :                     
-(2) 2068/     B8E :                     ; ====================================================================
-(2) 2069/     B8E : 84 02               fmFreq_List:	dw 644			; C-0
-(2) 2070/     B90 : A9 02               		dw 681
-(2) 2071/     B92 : D2 02               		dw 722
-(2) 2072/     B94 : FD 02               		dw 765
-(2) 2073/     B96 : 2A 03               		dw 810
-(2) 2074/     B98 : 5A 03               		dw 858
-(2) 2075/     B9A : 8E 03               		dw 910
-(2) 2076/     B9C : C4 03               		dw 964
-(2) 2077/     B9E : FD 03               		dw 1021
-(2) 2078/     BA0 : 39 04               		dw 1081
-(2) 2079/     BA2 : 7A 04               		dw 1146
-(2) 2080/     BA4 : BE 04               		dw 1214
-(2) 2081/     BA6 : 84 0A               		dw 644|800h		; C-1
-(2) 2082/     BA8 : A9 0A               		dw 681|800h
-(2) 2083/     BAA : D2 0A               		dw 722|800h
-(2) 2084/     BAC : FD 0A               		dw 765|800h
-(2) 2085/     BAE : 2A 0B               		dw 810|800h
-(2) 2086/     BB0 : 5A 0B               		dw 858|800h
-(2) 2087/     BB2 : 8E 0B               		dw 910|800h
-(2) 2088/     BB4 : C4 0B               		dw 964|800h
-(2) 2089/     BB6 : FD 0B               		dw 1021|800h
-(2) 2090/     BB8 : 39 0C               		dw 1081|800h
-(2) 2091/     BBA : 7A 0C               		dw 1146|800h
-(2) 2092/     BBC : BE 0C               		dw 1214|800h
-(2) 2093/     BBE : 84 12               		dw 644|1000h		; C-2
-(2) 2094/     BC0 : A9 12               		dw 681|1000h
-(2) 2095/     BC2 : D2 12               		dw 722|1000h
-(2) 2096/     BC4 : FD 12               		dw 765|1000h
-(2) 2097/     BC6 : 2A 13               		dw 810|1000h
-(2) 2098/     BC8 : 5A 13               		dw 858|1000h
-(2) 2099/     BCA : 8E 13               		dw 910|1000h
-(2) 2100/     BCC : C4 13               		dw 964|1000h
-(2) 2101/     BCE : FD 13               		dw 1021|1000h
-(2) 2102/     BD0 : 39 14               		dw 1081|1000h
-(2) 2103/     BD2 : 7A 14               		dw 1146|1000h
-(2) 2104/     BD4 : BE 14               		dw 1214|1000h
-(2) 2105/     BD6 : 84 1A               		dw 644|1800h		; C-3
-(2) 2106/     BD8 : A9 1A               		dw 681|1800h
-(2) 2107/     BDA : D2 1A               		dw 722|1800h
-(2) 2108/     BDC : FD 1A               		dw 765|1800h
-(2) 2109/     BDE : 2A 1B               		dw 810|1800h
-(2) 2110/     BE0 : 5A 1B               		dw 858|1800h
-(2) 2111/     BE2 : 8E 1B               		dw 910|1800h
-(2) 2112/     BE4 : C4 1B               		dw 964|1800h
-(2) 2113/     BE6 : FD 1B               		dw 1021|1800h
-(2) 2114/     BE8 : 39 1C               		dw 1081|1800h
-(2) 2115/     BEA : 7A 1C               		dw 1146|1800h
-(2) 2116/     BEC : BE 1C               		dw 1214|1800h
-(2) 2117/     BEE : 84 22               		dw 644|2000h		; C-4
-(2) 2118/     BF0 : A9 22               		dw 681|2000h
-(2) 2119/     BF2 : D2 22               		dw 722|2000h
-(2) 2120/     BF4 : FD 22               		dw 765|2000h
-(2) 2121/     BF6 : 2A 23               		dw 810|2000h
-(2) 2122/     BF8 : 5A 23               		dw 858|2000h
-(2) 2123/     BFA : 8E 23               		dw 910|2000h
-(2) 2124/     BFC : C4 23               		dw 964|2000h
-(2) 2125/     BFE : FD 23               		dw 1021|2000h
-(2) 2126/     C00 : 39 24               		dw 1081|2000h
-(2) 2127/     C02 : 7A 24               		dw 1146|2000h
-(2) 2128/     C04 : BE 24               		dw 1214|2000h
-(2) 2129/     C06 : 84 2A               		dw 644|2800h		; C-5
-(2) 2130/     C08 : A9 2A               		dw 681|2800h
-(2) 2131/     C0A : D2 2A               		dw 722|2800h
-(2) 2132/     C0C : FD 2A               		dw 765|2800h
-(2) 2133/     C0E : 2A 2B               		dw 810|2800h
-(2) 2134/     C10 : 5A 2B               		dw 858|2800h
-(2) 2135/     C12 : 8E 2B               		dw 910|2800h
-(2) 2136/     C14 : C4 2B               		dw 964|2800h
-(2) 2137/     C16 : FD 2B               		dw 1021|2800h
-(2) 2138/     C18 : 39 2C               		dw 1081|2800h
-(2) 2139/     C1A : 7A 2C               		dw 1146|2800h
-(2) 2140/     C1C : BE 2C               		dw 1214|2800h		
-(2) 2141/     C1E : 84 32               		dw 644|3000h		; C-6
-(2) 2142/     C20 : A9 32               		dw 681|3000h
-(2) 2143/     C22 : D2 32               		dw 722|3000h
-(2) 2144/     C24 : FD 32               		dw 765|3000h
-(2) 2145/     C26 : 2A 33               		dw 810|3000h
-(2) 2146/     C28 : 5A 33               		dw 858|3000h
-(2) 2147/     C2A : 8E 33               		dw 910|3000h
-(2) 2148/     C2C : C4 33               		dw 964|3000h
-(2) 2149/     C2E : FD 33               		dw 1021|3000h
-(2) 2150/     C30 : 39 34               		dw 1081|3000h
-(2) 2151/     C32 : 7A 34               		dw 1146|3000h
-(2) 2152/     C34 : BE 34               		dw 1214|3000h
-(2) 2153/     C36 : 84 3A               		dw 644|3800h		; C-7
-(2) 2154/     C38 : A9 3A               		dw 681|3800h
-(2) 2155/     C3A : D2 3A               		dw 722|3800h
-(2) 2156/     C3C : FD 3A               		dw 765|3800h
-(2) 2157/     C3E : 2A 3B               		dw 810|3800h
-(2) 2158/     C40 : 5A 3B               		dw 858|3800h
-(2) 2159/     C42 : 8E 3B               		dw 910|3800h
-(2) 2160/     C44 : C4 3B               		dw 964|3800h
-(2) 2161/     C46 : FD 3B               		dw 1021|3800h
-(2) 2162/     C48 : 39 3C               		dw 1081|3800h
-(2) 2163/     C4A : 7A 3C               		dw 1146|3800h
-(2) 2164/     C4C : BE 3C               		dw 1214|3800h
-(2) 2165/     C4E :                     
-(2) 2166/     C4E :                     psgFreq_List:
-(2) 2167/     C4E : FF FF               		dw -1		; C-0 $0
-(2) 2168/     C50 : FF FF               		dw -1
-(2) 2169/     C52 : FF FF               		dw -1
-(2) 2170/     C54 : FF FF               		dw -1
-(2) 2171/     C56 : FF FF               		dw -1
-(2) 2172/     C58 : FF FF               		dw -1
-(2) 2173/     C5A : FF FF               		dw -1
-(2) 2174/     C5C : FF FF               		dw -1
-(2) 2175/     C5E : FF FF               		dw -1
-(2) 2176/     C60 : FF FF               		dw -1
-(2) 2177/     C62 : FF FF               		dw -1
-(2) 2178/     C64 : FF FF               		dw -1
-(2) 2179/     C66 : FF FF               		dw -1		; C-1 $C
-(2) 2180/     C68 : FF FF               		dw -1
-(2) 2181/     C6A : FF FF               		dw -1
-(2) 2182/     C6C : FF FF               		dw -1
-(2) 2183/     C6E : FF FF               		dw -1
-(2) 2184/     C70 : FF FF               		dw -1
-(2) 2185/     C72 : FF FF               		dw -1
-(2) 2186/     C74 : FF FF               		dw -1
-(2) 2187/     C76 : FF FF               		dw -1
-(2) 2188/     C78 : FF FF               		dw -1
-(2) 2189/     C7A : FF FF               		dw -1
-(2) 2190/     C7C : FF FF               		dw -1
-(2) 2191/     C7E : FF FF               		dw -1		; C-2 $18
-(2) 2192/     C80 : FF FF               		dw -1
-(2) 2193/     C82 : FF FF               		dw -1
-(2) 2194/     C84 : FF FF               		dw -1
-(2) 2195/     C86 : FF FF               		dw -1
-(2) 2196/     C88 : FF FF               		dw -1
-(2) 2197/     C8A : FF FF               		dw -1
-(2) 2198/     C8C : FF FF               		dw -1
-(2) 2199/     C8E : FF FF               		dw -1
-(2) 2200/     C90 : FF FF               		dw -1
-(2) 2201/     C92 : FF FF               		dw -1
-(2) 2202/     C94 : FF FF               		dw -1
-(2) 2203/     C96 : FF FF               		dw -1		; C-3 $24
-(2) 2204/     C98 : FF FF               		dw -1
-(2) 2205/     C9A : FF FF               		dw -1
-(2) 2206/     C9C : FF FF               		dw -1
-(2) 2207/     C9E : FF FF               		dw -1
-(2) 2208/     CA0 : FF FF               		dw -1
-(2) 2209/     CA2 : FF FF               		dw -1
-(2) 2210/     CA4 : FF FF               		dw -1
-(2) 2211/     CA6 : FF FF               		dw -1
-(2) 2212/     CA8 : F8 03               		dw 3F8h
-(2) 2213/     CAA : BF 03               		dw 3BFh
-(2) 2214/     CAC : 89 03               		dw 389h
-(2) 2215/     CAE : 56 03               		dw 356h		;C-4 30
-(2) 2216/     CB0 : 26 03               		dw 326h
-(2) 2217/     CB2 : F9 02               		dw 2F9h
-(2) 2218/     CB4 : CE 02               		dw 2CEh
-(2) 2219/     CB6 : A5 02               		dw 2A5h
-(2) 2220/     CB8 : 80 02               		dw 280h
-(2) 2221/     CBA : 5C 02               		dw 25Ch
-(2) 2222/     CBC : 3A 02               		dw 23Ah
-(2) 2223/     CBE : 1A 02               		dw 21Ah
-(2) 2224/     CC0 : FB 01               		dw 1FBh
-(2) 2225/     CC2 : DF 01               		dw 1DFh
-(2) 2226/     CC4 : C4 01               		dw 1C4h
-(2) 2227/     CC6 : AB 01               		dw 1ABh		;C-5 3C
-(2) 2228/     CC8 : 93 01               		dw 193h
-(2) 2229/     CCA : 7D 01               		dw 17Dh
-(2) 2230/     CCC : 67 01               		dw 167h
-(2) 2231/     CCE : 53 01               		dw 153h
-(2) 2232/     CD0 : 40 01               		dw 140h
-(2) 2233/     CD2 : 2E 01               		dw 12Eh
-(2) 2234/     CD4 : 1D 01               		dw 11Dh
-(2) 2235/     CD6 : 0D 01               		dw 10Dh
-(2) 2236/     CD8 : FE 00               		dw 0FEh
-(2) 2237/     CDA : EF 00               		dw 0EFh
-(2) 2238/     CDC : E2 00               		dw 0E2h
-(2) 2239/     CDE : D6 00               		dw 0D6h		;C-6 48
-(2) 2240/     CE0 : C9 00               		dw 0C9h
-(2) 2241/     CE2 : BE 00               		dw 0BEh
-(2) 2242/     CE4 : B4 00               		dw 0B4h
-(2) 2243/     CE6 : A9 00               		dw 0A9h
-(2) 2244/     CE8 : A0 00               		dw 0A0h
-(2) 2245/     CEA : 97 00               		dw 97h
-(2) 2246/     CEC : 8F 00               		dw 8Fh
-(2) 2247/     CEE : 87 00               		dw 87h
-(2) 2248/     CF0 : 7F 00               		dw 7Fh
-(2) 2249/     CF2 : 78 00               		dw 78h
-(2) 2250/     CF4 : 71 00               		dw 71h
-(2) 2251/     CF6 : 6B 00               		dw 6Bh		; C-7 54
-(2) 2252/     CF8 : 65 00               		dw 65h
-(2) 2253/     CFA : 5F 00               		dw 5Fh
-(2) 2254/     CFC : 5A 00               		dw 5Ah
-(2) 2255/     CFE : 55 00               		dw 55h
-(2) 2256/     D00 : 50 00               		dw 50h
-(2) 2257/     D02 : 4B 00               		dw 4Bh
-(2) 2258/     D04 : 47 00               		dw 47h
-(2) 2259/     D06 : 43 00               		dw 43h
-(2) 2260/     D08 : 40 00               		dw 40h
-(2) 2261/     D0A : 3C 00               		dw 3Ch
-(2) 2262/     D0C : 39 00               		dw 39h
-(2) 2263/     D0E : 36 00               		dw 36h		; C-8 $60
-(2) 2264/     D10 : 33 00               		dw 33h
-(2) 2265/     D12 : 30 00               		dw 30h
-(2) 2266/     D14 : 2D 00               		dw 2Dh
-(2) 2267/     D16 : 2B 00               		dw 2Bh
-(2) 2268/     D18 : 28 00               		dw 28h
-(2) 2269/     D1A : 26 00               		dw 26h
-(2) 2270/     D1C : 24 00               		dw 24h
-(2) 2271/     D1E : 22 00               		dw 22h
-(2) 2272/     D20 : 20 00               		dw 20h
-(2) 2273/     D22 : 1F 00               		dw 1Fh
-(2) 2274/     D24 : 1D 00               		dw 1Dh
-(2) 2275/     D26 : 1B 00               		dw 1Bh		; C-9 $6C
-(2) 2276/     D28 : 1A 00               		dw 1Ah
-(2) 2277/     D2A : 18 00               		dw 18h
-(2) 2278/     D2C : 17 00               		dw 17h
-(2) 2279/     D2E : 16 00               		dw 16h
-(2) 2280/     D30 : 15 00               		dw 15h
-(2) 2281/     D32 : 13 00               		dw 13h
-(2) 2282/     D34 : 12 00               		dw 12h
-(2) 2283/     D36 : 11 00               		dw 11h
-(2) 2284/     D38 : 10 00                		dw 10h
-(2) 2285/     D3A : 09 00                		dw 9h
-(2) 2286/     D3C : 08 00                		dw 8h
-(2) 2287/     D3E : 00 00               		dw 0		; use +60 if using C-5 for tone 3 noise
-(2) 2288/     D40 :                     		
-(2) 2289/     D40 : 00 01               wavFreq_List:	dw 100h		; C-0
-(2) 2290/     D42 : 00 01               		dw 100h
-(2) 2291/     D44 : 00 01               		dw 100h
-(2) 2292/     D46 : 00 01               		dw 100h
-(2) 2293/     D48 : 00 01               		dw 100h
-(2) 2294/     D4A : 00 01               		dw 100h
-(2) 2295/     D4C : 00 01               		dw 100h	
-(2) 2296/     D4E : 00 01               		dw 100h
-(2) 2297/     D50 : 00 01               		dw 100h
-(2) 2298/     D52 : 00 01               		dw 100h
-(2) 2299/     D54 : 00 01               		dw 100h
-(2) 2300/     D56 : 00 01               		dw 100h
-(2) 2301/     D58 : 00 01               		dw 100h		; C-1
-(2) 2302/     D5A : 00 01               		dw 100h
-(2) 2303/     D5C : 00 01               		dw 100h
-(2) 2304/     D5E : 00 01               		dw 100h
-(2) 2305/     D60 : 00 01               		dw 100h
-(2) 2306/     D62 : 00 01               		dw 100h
-(2) 2307/     D64 : 00 01               		dw 100h	
-(2) 2308/     D66 : 00 01               		dw 100h
-(2) 2309/     D68 : 00 01               		dw 100h
-(2) 2310/     D6A : 00 01               		dw 100h
-(2) 2311/     D6C : 00 01               		dw 100h
-(2) 2312/     D6E : 00 01               		dw 100h
-(2) 2313/     D70 : 00 01               		dw 100h		; C-2
-(2) 2314/     D72 : 00 01               		dw 100h
-(2) 2315/     D74 : 00 01               		dw 100h
-(2) 2316/     D76 : 00 01               		dw 100h
-(2) 2317/     D78 : 00 01               		dw 100h
-(2) 2318/     D7A : 00 01               		dw 100h
-(2) 2319/     D7C : 00 01               		dw 100h
-(2) 2320/     D7E : 00 01               		dw 100h
-(2) 2321/     D80 : 00 01               		dw 100h
-(2) 2322/     D82 : 00 01               		dw 100h
-(2) 2323/     D84 : 00 01               		dw 100h
-(2) 2324/     D86 : 3B 00               		dw 03Bh
-(2) 2325/     D88 : 3E 00               		dw 03Eh		; C-3 5512
-(2) 2326/     D8A : 43 00               		dw 043h		; C#3
-(2) 2327/     D8C : 46 00               		dw 046h		; D-3
-(2) 2328/     D8E : 49 00               		dw 049h		; D#3
-(2) 2329/     D90 : 4E 00               		dw 04Eh		; E-3
-(2) 2330/     D92 : 54 00               		dw 054h		; F-3
-(2) 2331/     D94 : 58 00               		dw 058h		; F#3
-(2) 2332/     D96 : 5E 00               		dw 05Eh		; G-3 8363 -17
-(2) 2333/     D98 : 63 00               		dw 063h		; G#3
-(2) 2334/     D9A : 68 00               		dw 068h		; A-3
-(2) 2335/     D9C : 70 00               		dw 070h		; A#3
-(2) 2336/     D9E : 75 00               		dw 075h		; B-3
-(2) 2337/     DA0 : 7F 00               		dw 07Fh		; C-4 11025 -12
-(2) 2338/     DA2 : 88 00               		dw 088h		; C#4
-(2) 2339/     DA4 : 8F 00               		dw 08Fh		; D-4
-(2) 2340/     DA6 : 97 00               		dw 097h		; D#4
-(2) 2341/     DA8 : A0 00               		dw 0A0h		; E-4
-(2) 2342/     DAA : AD 00               		dw 0ADh		; F-4
-(2) 2343/     DAC : B5 00               		dw 0B5h		; F#4
-(2) 2344/     DAE : C0 00               		dw 0C0h		; G-4
-(2) 2345/     DB0 : CC 00               		dw 0CCh		; G#4
-(2) 2346/     DB2 : D7 00               		dw 0D7h		; A-4
-(2) 2347/     DB4 : E7 00               		dw 0E7h		; A#4
-(2) 2348/     DB6 : F0 00               		dw 0F0h		; B-4
-(2) 2349/     DB8 : 00 01               		dw 100h		; C-5 22050
-(2) 2350/     DBA : 10 01               		dw 110h		; C#5
-(2) 2351/     DBC : 20 01               		dw 120h		; D-5
-(2) 2352/     DBE : 2C 01               		dw 12Ch		; D#5
-(2) 2353/     DC0 : 42 01               		dw 142h		; E-5
-(2) 2354/     DC2 : 58 01               		dw 158h		; F-5
-(2) 2355/     DC4 : 6A 01               		dw 16Ah		; F#5 32000 +6
-(2) 2356/     DC6 : 7E 01               		dw 17Eh		; G-5
-(2) 2357/     DC8 : 90 01               		dw 190h		; G#5
-(2) 2358/     DCA : AC 01               		dw 1ACh		; A-5
-(2) 2359/     DCC : C2 01               		dw 1C2h		; A#5
-(2) 2360/     DCE : E0 01               		dw 1E0h		; B-5
-(2) 2361/     DD0 : F8 01               		dw 1F8h		; C-6 44100 +12
-(2) 2362/     DD2 : 10 02               		dw 210h		; C#6
-(2) 2363/     DD4 : 40 02               		dw 240h		; D-6
-(2) 2364/     DD6 : 60 02               		dw 260h		; D#6
-(2) 2365/     DD8 : 80 02               		dw 280h		; E-6
-(2) 2366/     DDA : A0 02               		dw 2A0h		; F-6
-(2) 2367/     DDC : D0 02               		dw 2D0h		; F#6
-(2) 2368/     DDE : F8 02               		dw 2F8h		; G-6
-(2) 2369/     DE0 : 20 03               		dw 320h		; G#6
-(2) 2370/     DE2 : 50 03               		dw 350h		; A-6
-(2) 2371/     DE4 : 80 03               		dw 380h		; A#6
-(2) 2372/     DE6 : C0 03               		dw 3C0h		; B-6
-(2) 2373/     DE8 : 00 04               		dw 400h		; C-7 88200
-(2) 2374/     DEA : 00 01               		dw 100h
-(2) 2375/     DEC : 00 01               		dw 100h
-(2) 2376/     DEE : 00 01               		dw 100h
-(2) 2377/     DF0 : 00 01               		dw 100h
-(2) 2378/     DF2 : 00 01               		dw 100h
-(2) 2379/     DF4 : 00 01               		dw 100h	
-(2) 2380/     DF6 : 00 01               		dw 100h
-(2) 2381/     DF8 : 00 01               		dw 100h
-(2) 2382/     DFA : 00 01               		dw 100h
-(2) 2383/     DFC : 00 01               		dw 100h
-(2) 2384/     DFE : 00 01               		dw 100h	
-(2) 2385/     E00 : 00 01               		dw 100h		; C-8
-(2) 2386/     E02 : 00 01               		dw 100h
-(2) 2387/     E04 : 00 01               		dw 100h
-(2) 2388/     E06 : 00 01               		dw 100h
-(2) 2389/     E08 : 00 01               		dw 100h
-(2) 2390/     E0A : 00 01               		dw 100h
-(2) 2391/     E0C : 00 01               		dw 100h	
-(2) 2392/     E0E : 00 01               		dw 100h
-(2) 2393/     E10 : 00 01               		dw 100h
-(2) 2394/     E12 : 00 01               		dw 100h
-(2) 2395/     E14 : 00 01               		dw 100h
-(2) 2396/     E16 : 00 01               		dw 100h	
-(2) 2397/     E18 : 00 01               		dw 100h		; C-9
-(2) 2398/     E1A : 00 01               		dw 100h
-(2) 2399/     E1C : 00 01               		dw 100h
-(2) 2400/     E1E : 00 01               		dw 100h
-(2) 2401/     E20 : 00 01               		dw 100h
-(2) 2402/     E22 : 00 01               		dw 100h
-(2) 2403/     E24 : 00 01               		dw 100h	
-(2) 2404/     E26 : 00 01               		dw 100h
-(2) 2405/     E28 : 00 01               		dw 100h
-(2) 2406/     E2A : 00 01               		dw 100h
-(2) 2407/     E2C : 00 01               		dw 100h
-(2) 2408/     E2E : 00 01               		dw 100h
-(2) 2409/     E30 :                     		
-(2) 2410/     E30 :                     ; ====================================================================
-(2) 2411/     E30 :                     ; ----------------------------------------------------------------
-(2) 2412/     E30 :                     ; Z80 RAM
-(2) 2413/     E30 :                     ; ----------------------------------------------------------------
-(2) 2414/     E30 :                     
-(2) 2415/     E30 :                     ; ----------------------------------------------------
-(2) 2416/     E30 :                     ; Tracker data buffer
-(2) 2417/     E30 :                     ; ----------------------------------------------------
-(2) 2418/     E30 :                     
-(2) 2419/     E30 : =0H                 trck_ReqBlk	equ 00h		; word
-(2) 2420/     E30 : =2H                 trck_ReqPatt	equ 02h		; word
-(2) 2421/     E30 : =4H                 trck_ReqIns	equ 04h		; word
-(2) 2422/     E30 : =6H                 trck_ReqTicks	equ 06h
-(2) 2423/     E30 : =7H                 trck_ReqTempo	equ 07h
-(2) 2424/     E30 : =8H                 trck_ReqCurrBlk	equ 08h
-(2) 2425/     E30 : =9H                 trck_ReqSndBnk	equ 09h
-(2) 2426/     E30 : =AH                 trck_ReqFlag	equ 0Ah
-(2) 2427/     E30 : =BH                 trck_ReqChnls	equ 0Bh
-(2) 2428/     E30 : =CH                 trck_PsgNoise	equ 0Ch
-(2) 2429/     E30 : =DH                 trck_TicksRead	equ 0Dh
-(2) 2430/     E30 : =EH                 trck_BlockCurr	equ 0Eh
-(2) 2431/     E30 : =FH                 trck_MasterVol	equ 0Fh
-(2) 2432/     E30 : =10H                trck_Priority	equ 10h
-(2) 2433/     E30 : =11H                trck_Active	equ 11h
-(2) 2434/     E30 : =12H                trck_Blocks	equ 12h		; word
-(2) 2435/     E30 : =14H                trck_PattBase	equ 14h		; word
-(2) 2436/     E30 : =16H                trck_Instr	equ 16h		; word
-(2) 2437/     E30 : =18H                trck_PattRead	equ 18h		; word
-(2) 2438/     E30 : =1AH                trck_RowSteps	equ 1Ah		; word
-(2) 2439/     E30 : =1CH                trck_TicksMain 	equ 1Ch
-(2) 2440/     E30 : =1DH                trck_TempoBits	equ 1Dh
-(2) 2441/     E30 : =1EH                trck_RowWait	equ 1Eh
-(2) 2442/     E30 : =1FH                trck_TicksCurr	equ 1Fh
-(2) 2443/     E30 :                     
-(2) 2444/     E30 :                     ; ----------------------------------------------------
-(2) 2445/     E30 :                     ; Track buffer
-(2) 2446/     E30 :                     ; ----------------------------------------------------
-(2) 2447/     E30 :                     
-(2) 2448/     E30 :                     SndBuff_Track_1:
-(2) 2449/     E30 :                     		ds 10h		; Request list
-(2) 2450/     E40 : 00                  		db 0		; Priority
-(2) 2451/     E41 :                     		ds 0Fh		; Main track
-(2) 2452/     E50 :                     SndBuff_Track_2:
-(2) 2453/     E50 :                     		ds 10h
-(2) 2454/     E60 : 01                  		db 1
-(2) 2455/     E61 :                     		ds 0Fh
-(2) 2456/     E70 :                     
-(2) 2457/     E70 :                     ; ----------------------------------------------------
-(2) 2458/     E70 :                     ; Tracker note buffers
-(2) 2459/     E70 :                     ; ----------------------------------------------------
-(2) 2460/     E70 :                     
-(2) 2461/     E70 : =0H                 chnl_Chip	equ 0
-(2) 2462/     E70 : =1H                 chnl_Type	equ 1
-(2) 2463/     E70 : =2H                 chnl_Note	equ 2
-(2) 2464/     E70 : =3H                 chnl_Ins	equ 3
-(2) 2465/     E70 : =4H                 chnl_Vol	equ 4
-(2) 2466/     E70 : =5H                 chnl_EffId	equ 5
-(2) 2467/     E70 : =6H                 chnl_EffArg	equ 6
-(2) 2468/     E70 : =7H                 chnl_InsAddr	equ 7		; word
-(2) 2469/     E70 : =9H                 chnl_Freq	equ 09h		; word
-(2) 2470/     E70 : =BH                 chnl_InsType	equ 0Bh
-(2) 2471/     E70 : =CH                 chnl_InsOpt	equ 0Ch
-(2) 2472/     E70 : =DH                 chnl_FmPan	equ 0Dh
-(2) 2473/     E70 : =EH                 chnl_FmRegB0	equ 0Eh
-(2) 2474/     E70 : =FH                 chnl_FmRegB4	equ 0Fh
-(2) 2475/     E70 : =10H                chnl_FmRegKeys	equ 10h
-(2) 2476/     E70 : =11H                chnl_FmVolBase	equ 11h
-(2) 2477/     E70 : =12H                chnl_PsgVolBase	equ 12h
-(2) 2478/     E70 : =13H                chnl_PsgVolEnv	equ 13h
-(2) 2479/     E70 : =14H                chnl_PsgIndx	equ 14h
-(2) 2480/     E70 : =15H                chnl_SmplFlags	equ 15h
-(2) 2481/     E70 : =16H                chnl_EfVolSlide	equ 16h
-(2) 2482/     E70 : =17H                chnl_EfNewVol	equ 17h
-(2) 2483/     E70 : =18H                chnl_EfPortam	equ 18h		; word
-(2) 2484/     E70 : =1AH                chnl_EfNewFreq	equ 1Ah		; word
-(2) 2485/     E70 : =1CH                chnl_PsgOutFreq	equ 1Ch		; word
-(2) 2486/     E70 :                     
-(2) 2487/     E70 :                     SndBuff_ChnlBuff_1:
-(2) 2488/     E70 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2489/     E78 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2490/     E80 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2491/     E88 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2492/     E90 :                     		
-(2) 2493/     E90 : 01 00 00 00 00 00   		db 01h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2494/     E98 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2495/     EA0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2496/     EA8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2497/     EB0 :                     
-(2) 2498/     EB0 : 04 00 00 00 00 00   		db 04h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2499/     EB8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2500/     EC0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2501/     EC8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2502/     ED0 :                     
-(2) 2503/     ED0 : 05 00 00 00 00 00   		db 05h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2504/     ED8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2505/     EE0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2506/     EE8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2507/     EF0 :                     		
-(2) 2508/     EF0 : 02 00 00 00 00 00   		db 02h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2509/     EF8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2510/     F00 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2511/     F08 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2512/     F10 :                     
-(2) 2513/     F10 : 06 00 00 00 00 00   		db 06h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2514/     F18 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2515/     F20 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2516/     F28 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2517/     F30 :                     
-(2) 2518/     F30 :                     ; SndBuff_ChnlPsg_1:
-(2) 2519/     F30 : 80 00 00 00 00 00   		db 80h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2520/     F38 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2521/     F40 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2522/     F48 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2523/     F50 :                     
-(2) 2524/     F50 : A0 00 00 00 00 00   		db 0A0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2525/     F58 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2526/     F60 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2527/     F68 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2528/     F70 :                     
-(2) 2529/     F70 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2530/     F78 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2531/     F80 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2532/     F88 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2533/     F90 :                     
-(2) 2534/     F90 : E0 00 00 00 00 00   		db 0E0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2535/     F98 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2536/     FA0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2537/     FA8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2538/     FB0 :                     
-(2) 2539/     FB0 :                     		
-(2) 2540/     FB0 :                     SndBuff_ChnlBuff_2:
-(2) 2541/     FB0 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2542/     FB8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2543/     FC0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2544/     FC8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2545/     FD0 :                     		
-(2) 2546/     FD0 : 01 00 00 00 00 00   		db 01h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2547/     FD8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2548/     FE0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2549/     FE8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2550/     FF0 :                     
-(2) 2551/     FF0 : 04 00 00 00 00 00   		db 04h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2552/     FF8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2553/    1000 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2554/    1008 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2555/    1010 :                     
-(2) 2556/    1010 : 05 00 00 00 00 00   		db 05h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2557/    1018 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2558/    1020 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2559/    1028 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2560/    1030 :                     		
-(2) 2561/    1030 : 02 00 00 00 00 00   		db 02h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2562/    1038 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2563/    1040 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2564/    1048 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2565/    1050 :                     
-(2) 2566/    1050 : 06 00 00 00 00 00   		db 06h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2567/    1058 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2568/    1060 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2569/    1068 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2570/    1070 :                     
-(2) 2571/    1070 :                     ; SndBuff_ChnlPsg_2:
-(2) 2572/    1070 : 80 00 00 00 00 00   		db 80h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2573/    1078 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2574/    1080 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2575/    1088 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2576/    1090 :                     
-(2) 2577/    1090 : A0 00 00 00 00 00   		db 0A0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2578/    1098 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2579/    10A0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2580/    10A8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2581/    10B0 :                     
-(2) 2582/    10B0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2583/    10B8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2584/    10C0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2585/    10C8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2586/    10D0 :                     
-(2) 2587/    10D0 : E0 00 00 00 00 00   		db 0E0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2588/    10D8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2589/    10E0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2590/    10E8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
-                    00 00 
-(2) 2591/    10F0 :                     
-(2) 2592/    10F0 :                     SndBuff_UsedChnls:
-(2) 2593/    10F0 :                     		ds 10*MAX_TRACKS
-(2) 2594/    1104 :                     SndBuff_UsedChnls_2:
-(2) 2595/    1104 :                     		ds 10*MAX_TRACKS
-(2) 2596/    1118 :                     
-(2) 2597/    1118 :                     ; ====================================================================
-(2) 2598/    1118 :                     ; ----------------------------------------------------------------
-(2) 2599/    1118 :                     ; MUSIC DATA
-(2) 2600/    1118 :                     ; ----------------------------------------------------------------
-(2) 2601/    1118 :                     
-(2) 2602/    1118 :                     ; ----------------------------------------------------
-(2) 2603/    1118 :                     ; PSG Instruments
-(2) 2604/    1118 :                     ; ----------------------------------------------------
-(2) 2605/    1118 :                     
-(2) 2606/    1118 : 00                  PsgIns_00:	db 0
-(2) 2607/    1119 : FF                  		db -1
-(2) 2608/    111A : 00 02 04 05 06      PsgIns_01:	db 0,2,4,5,6
-(2) 2609/    111F : FF                  		db -1
-(2) 2610/    1120 : 00 0F               PsgIns_02:	db 0,15
-(2) 2611/    1122 : FF                  		db -1
-(2) 2612/    1123 : 00 00 01 01 02 02   PsgIns_03:	db 0,0,1,1,2,2,3,4,6,10,15
+(2) 1211/     6A5 :                     ; ---------------------------------------------
+(2) 1212/     6A5 :                     ; These routines send the result data from
+(2) 1213/     6A5 :                     ; the channel buffer to their respective
+(2) 1214/     6A5 :                     ; sound chips
+(2) 1215/     6A5 :                     ; ---------------------------------------------
+(2) 1216/     6A5 :                     
+(2) 1217/     6A5 :                     .run_frequency:
+(2) 1218/     6A5 : DD 46 0B            		ld	b,(ix+chnl_InsType)
+(2) 1219/     6A8 : DD 4E 00            		ld	c,(ix+chnl_Chip)
+(2) 1220/     6AB : 78                  		ld	a,b
+(2) 1221/     6AC : B7                  		or	a			; Type 080h/0E0h?
+(2) 1222/     6AD : F2 B5 06            		jp	p,.freqrn_not3
+(2) 1223/     6B0 : CB 79               		bit 	7,c			; PSG channel?
+(2) 1224/     6B2 : C2 2F 07            		jp	nz,.freqrn_psg
+(2) 1225/     6B5 :                     .freqrn_not3:
+(2) 1226/     6B5 : 78                  		ld	a,b
+(2) 1227/     6B6 : FE 02               		cp	2				; Type 2?
+(2) 1228/     6B8 : C2 C1 06            		jp	nz,.freqrn_fm
+(2) 1229/     6BB : 79                  		ld	a,c				; Channel 6?
+(2) 1230/     6BC : FE 06               		cp	6
+(2) 1231/     6BE : CA F1 06            		jp	z,.freqrn_smpl
+(2) 1232/     6C1 :                     .freqrn_fm:
+(2) 1233/     6C1 : DD 5E 00            		ld	e,(ix+chnl_Chip)
+(2) 1234/     6C4 : CB 7B               		bit	7,e
+(2) 1235/     6C6 : C0                  		ret	nz
+(2) 1236/     6C7 : 16 28               		ld	d,28h
+(2) 1237/     6C9 : CD 78 0B            		call	SndDrv_FmSet_1			; KEYS OFF
+(2) 1238/     6CC : DD 7E 02            		ld	a,(ix+chnl_Note)
+(2) 1239/     6CF : FE FE               		cp	-2
+(2) 1240/     6D1 : C8                  		ret	z
+(2) 1241/     6D2 : FE FF               		cp	-1
+(2) 1242/     6D4 : C8                  		ret	z
+(2) 1243/     6D5 : DD 66 0A            		ld	h,(ix+(chnl_Freq+1))		; Copy freq
+(2) 1244/     6D8 : DD 6E 09            		ld	l,(ix+chnl_Freq)
+(2) 1245/     6DB : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
+(2) 1246/     6DE : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
+(2) 1247/     6E1 : CD 4D 08            		call	.set_fm_freq
+(2) 1248/     6E4 : DD 5E 10            		ld	e,(ix+chnl_FmRegKeys)		; KEYS ON
+(2) 1249/     6E7 : DD 7E 00            		ld	a,(ix+chnl_Chip)
+(2) 1250/     6EA : B3                  		or	e
+(2) 1251/     6EB : 5F                  		ld	e,a
+(2) 1252/     6EC : 16 28               		ld	d,28h
+(2) 1253/     6EE : C3 78 0B            		jp	SndDrv_FmSet_1
+(2) 1254/     6F1 :                     
+(2) 1255/     6F1 :                     .freqrn_smpl:
+(2) 1256/     6F1 : 1E 40               		ld	e,040h
+(2) 1257/     6F3 : DD 7E 02            		ld	a,(ix+chnl_Note)
+(2) 1258/     6F6 : FE FE               		cp	-2
+(2) 1259/     6F8 : CA 2A 07            		jp	z,.set_smpflag
+(2) 1260/     6FB : FE FF               		cp	-1
+(2) 1261/     6FD : CA 2A 07            		jp	z,.set_smpflag
+(2) 1262/     700 : DD 66 08            		ld	h,(ix+(chnl_InsAddr+1))
+(2) 1263/     703 : DD 6E 07            		ld	l,(ix+chnl_InsAddr)
+(2) 1264/     706 : 7C                  		ld	a,h
+(2) 1265/     707 : B5                  		or	l
+(2) 1266/     708 : C8                  		ret	z
+(2) 1267/     709 :                     		
+(2) 1268/     709 :                     	; Play SAMPLE
+(2) 1269/     709 : 11 06 28            		ld	de,2806h
+(2) 1270/     70C : CD 78 0B            		call	SndDrv_FmSet_1
+(2) 1271/     70F : DD 66 0A            		ld	h,(ix+(chnl_Freq+1))		; Copy freq
+(2) 1272/     712 : DD 6E 09            		ld	l,(ix+chnl_Freq)
+(2) 1273/     715 : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
+(2) 1274/     718 : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
+(2) 1275/     71B : 7D                  		ld	a,l
+(2) 1276/     71C : 32 2D 00            		ld	(Sample_Speed),a
+(2) 1277/     71F : 7C                  		ld	a,h
+(2) 1278/     720 : 32 2E 00            		ld	(Sample_Speed+1),a
+(2) 1279/     723 : DD 7E 15            		ld	a,(ix+chnl_SmplFlags)
+(2) 1280/     726 : 07                  		rlca
+(2) 1281/     727 : F6 01               		or	1
+(2) 1282/     729 : 5F                  		ld	e,a
+(2) 1283/     72A :                     .set_smpflag:
+(2) 1284/     72A : 7B                  		ld	a,e
+(2) 1285/     72B : 32 1F 00            		ld	(Sample_Flags),a
+(2) 1286/     72E : C9                  		ret
+(2) 1287/     72F :                     .freqrn_psg:
+(2) 1288/     72F : DD 66 0A            		ld	h,(ix+(chnl_Freq+1))		; Copy freq
+(2) 1289/     732 : DD 6E 09            		ld	l,(ix+chnl_Freq)
+(2) 1290/     735 : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
+(2) 1291/     738 : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
+(2) 1292/     73B : C3 7E 09            		jp	.set_psg_freq
+(2) 1293/     73E :                     
+(2) 1294/     73E :                     ; ------------------------------------
+(2) 1295/     73E :                     ; Turn FM volume regs down
+(2) 1296/     73E :                     ; TL = 07Fh
+(2) 1297/     73E :                     ; 
+(2) 1298/     73E :                     ; ix - current channel
+(2) 1299/     73E :                     ; ------------------------------------
+(2) 1300/     73E :                     
+(2) 1301/     73E :                     .fm_turnoff:
+(2) 1302/     73E : DD 7E 00            		ld	a,(ix+chnl_Chip)
+(2) 1303/     741 : 4F                  		ld	c,a
+(2) 1304/     742 : FE 06               		cp	6
+(2) 1305/     744 : C2 54 07            		jp	nz,.not_dac
+(2) 1306/     747 : DD 7E 0B            		ld	a,(ix+chnl_InsType)
+(2) 1307/     74A : FE 02               		cp	2
+(2) 1308/     74C : C2 54 07            		jp	nz,.not_dac
+(2) 1309/     74F : 3E 40               		ld	a,40h
+(2) 1310/     751 : 32 1F 00            		ld	(Sample_Flags),a
+(2) 1311/     754 :                     .not_dac:
+(2) 1312/     754 : 79                  		ld	a,c
+(2) 1313/     755 : B7                  		or	a
+(2) 1314/     756 : F8                  		ret	m
+(2) 1315/     757 :                     		
+(2) 1316/     757 :                     .fm_settloff:
+(2) 1317/     757 : 5F                  		ld	e,a
+(2) 1318/     758 : 16 28               		ld	d,28h
+(2) 1319/     75A : CD 78 0B            		call	SndDrv_FmSet_1
+(2) 1320/     75D : 7B                  		ld	a,e
+(2) 1321/     75E : E6 03               		and	11b
+(2) 1322/     760 : F6 40               		or	40h
+(2) 1323/     762 : 1E 7F               		ld	e,7Fh
+(2) 1324/     764 : 57                  		ld	d,a
+(2) 1325/     765 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1326/     768 : 14                  		inc	d
+(2) 1327/     769 : 14                  		inc	d
+(2) 1328/     76A : 14                  		inc	d
+(2) 1329/     76B : 14                  		inc	d
+(2) 1330/     76C : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1331/     76F : 14                  		inc	d
+(2) 1332/     770 : 14                  		inc	d
+(2) 1333/     771 : 14                  		inc	d
+(2) 1334/     772 : 14                  		inc	d
+(2) 1335/     773 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1336/     776 : 14                  		inc	d
+(2) 1337/     777 : 14                  		inc	d
+(2) 1338/     778 : 14                  		inc	d
+(2) 1339/     779 : 14                  		inc	d
+(2) 1340/     77A : C3 71 0B            		jp	SndDrv_FmAutoSet
+(2) 1341/     77D :                     
+(2) 1342/     77D :                     ; ------------------------------------
+(2) 1343/     77D :                     ; FM normal registers
+(2) 1344/     77D :                     ; 
+(2) 1345/     77D :                     ; NOTE: call this first BEFORE
+(2) 1346/     77D :                     ; modyfing the volume
+(2) 1347/     77D :                     ; 
+(2) 1348/     77D :                     ; ix - current channel
+(2) 1349/     77D :                     ; ------------------------------------
+(2) 1350/     77D :                     
+(2) 1351/     77D :                     .set_fm_ins:
+(2) 1352/     77D : DD 4E 00            		ld	c,(ix+chnl_Chip)
+(2) 1353/     780 : DD 66 08            		ld	h,(ix+(chnl_InsAddr+1))
+(2) 1354/     783 : DD 6E 07            		ld	l,(ix+chnl_InsAddr)
+(2) 1355/     786 : 7C                  		ld	a,h
+(2) 1356/     787 : B5                  		or	l
+(2) 1357/     788 : C8                  		ret	z
+(2) 1358/     789 : 79                  		ld	a,c			; FM6?
+(2) 1359/     78A : FE 06               		cp	6
+(2) 1360/     78C : C2 9C 07            		jp	nz,.no_chnl6
+(2) 1361/     78F : DD 7E 0B            		ld	a,(ix+chnl_InsType)
+(2) 1362/     792 : FE 02               		cp	2			; Type 2?
+(2) 1363/     794 : CA 2E 09            		jp	z,.set_sampl
+(2) 1364/     797 : 3E 40               		ld	a,40h			; IF type != 2, stop sample to unlock FM6
+(2) 1365/     799 : 32 1F 00            		ld	(Sample_Flags),a
+(2) 1366/     79C :                     .no_chnl6:
+(2) 1367/     79C : 79                  		ld	a,c
+(2) 1368/     79D : E6 03               		and	11b
+(2) 1369/     79F : F6 30               		or	30h
+(2) 1370/     7A1 : 57                  		ld	d,a
+(2) 1371/     7A2 : 06 07               		ld	b,1Ch/4
+(2) 1372/     7A4 :                     .fmfiles:
+(2) 1373/     7A4 : 5E                  		ld	e,(hl)
+(2) 1374/     7A5 : 23                  		inc 	hl
+(2) 1375/     7A6 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1376/     7A9 : 14                  		inc 	d
+(2) 1377/     7AA : 14                  		inc 	d
+(2) 1378/     7AB : 14                  		inc 	d
+(2) 1379/     7AC : 14                  		inc 	d
+(2) 1380/     7AD : 5E                  		ld	e,(hl)
+(2) 1381/     7AE : 23                  		inc 	hl
+(2) 1382/     7AF : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1383/     7B2 : 14                  		inc 	d
+(2) 1384/     7B3 : 14                  		inc 	d
+(2) 1385/     7B4 : 14                  		inc 	d
+(2) 1386/     7B5 : 14                  		inc 	d
+(2) 1387/     7B6 : 5E                  		ld	e,(hl)
+(2) 1388/     7B7 : 23                  		inc 	hl
+(2) 1389/     7B8 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1390/     7BB : 14                  		inc 	d
+(2) 1391/     7BC : 14                  		inc 	d
+(2) 1392/     7BD : 14                  		inc 	d
+(2) 1393/     7BE : 14                  		inc 	d
+(2) 1394/     7BF : 5E                  		ld	e,(hl)
+(2) 1395/     7C0 : 23                  		inc 	hl
+(2) 1396/     7C1 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1397/     7C4 : 14                  		inc 	d
+(2) 1398/     7C5 : 14                  		inc 	d
+(2) 1399/     7C6 : 14                  		inc 	d
+(2) 1400/     7C7 : 14                  		inc 	d
+(2) 1401/     7C8 : 10 DA               		djnz	.fmfiles
+(2) 1402/     7CA :                     
+(2) 1403/     7CA : 16 B0               		ld	d,0B0h
+(2) 1404/     7CC : 79                  		ld	a,c
+(2) 1405/     7CD : E6 03               		and	11b
+(2) 1406/     7CF : B2                  		or	d
+(2) 1407/     7D0 : 57                  		ld	d,a
+(2) 1408/     7D1 : 5E                  		ld	e,(hl)			; 0B0h
+(2) 1409/     7D2 : DD 73 0E            		ld	(ix+chnl_FmRegB0),e
+(2) 1410/     7D5 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1411/     7D8 : 23                  		inc 	hl
+(2) 1412/     7D9 : 5E                  		ld	e,(hl)			; 0B4h
+(2) 1413/     7DA : 16 B4               		ld	d,0B4h
+(2) 1414/     7DC : 79                  		ld	a,c
+(2) 1415/     7DD : E6 03               		and	11b
+(2) 1416/     7DF : B2                  		or	d
+(2) 1417/     7E0 : 57                  		ld	d,a
+(2) 1418/     7E1 : 7E                  		ld	a,(hl)
+(2) 1419/     7E2 : DD 77 0F            		ld	(ix+chnl_FmRegB4),a	
+(2) 1420/     7E5 : DD B6 0D            		or	(ix+chnl_FmPan)		; FM panning
+(2) 1421/     7E8 : 5F                  		ld	e,a
+(2) 1422/     7E9 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1423/     7EC : 23                  		inc 	hl
+(2) 1424/     7ED : 5E                  		ld	e,(hl)			; FM3 flag
+(2) 1425/     7EE : 23                  		inc 	hl
+(2) 1426/     7EF : 7E                  		ld	a,(hl)			; 028h
+(2) 1427/     7F0 : 23                  		inc 	hl
+(2) 1428/     7F1 : DD 77 10            		ld	(ix+chnl_FmRegKeys),a
+(2) 1429/     7F4 :                     
+(2) 1430/     7F4 : 79                  		ld	a,c
+(2) 1431/     7F5 : FE 02               		cp	2			; Channel 3?
+(2) 1432/     7F7 : C0                  		ret	nz
+(2) 1433/     7F8 : 1E 00               		ld	e,0
+(2) 1434/     7FA : DD 7E 0B            		ld	a,(ix+chnl_InsType)
+(2) 1435/     7FD : FE 01               		cp	1			; Type 1?
+(2) 1436/     7FF : C2 48 08            		jp	nz,.set_fm3reg
+(2) 1437/     802 : 16 A6               		ld	d,0A6h			; OP1
+(2) 1438/     804 : 5E                  		ld	e,(hl)
+(2) 1439/     805 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1440/     808 : 23                  		inc 	hl
+(2) 1441/     809 : 16 A2               		ld	d,0A2h
+(2) 1442/     80B : 5E                  		ld	e,(hl)
+(2) 1443/     80C : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1444/     80F : 23                  		inc 	hl
+(2) 1445/     810 : 16 AC               		ld	d,0ACh			; OP2
+(2) 1446/     812 : 5E                  		ld	e,(hl)
+(2) 1447/     813 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1448/     816 : 23                  		inc 	hl
+(2) 1449/     817 : 16 A8               		ld	d,0A8h
+(2) 1450/     819 : 5E                  		ld	e,(hl)
+(2) 1451/     81A : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1452/     81D : 23                  		inc 	hl
+(2) 1453/     81E : 16 AD               		ld	d,0ADh			; OP3
+(2) 1454/     820 : 5E                  		ld	e,(hl)
+(2) 1455/     821 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1456/     824 : 23                  		inc 	hl
+(2) 1457/     825 : 16 A9               		ld	d,0A9h
+(2) 1458/     827 : 5E                  		ld	e,(hl)
+(2) 1459/     828 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1460/     82B : 23                  		inc 	hl
+(2) 1461/     82C : 16 AE               		ld	d,0AEh			; OP4
+(2) 1462/     82E : 5E                  		ld	e,(hl)
+(2) 1463/     82F : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1464/     832 : 23                  		inc 	hl
+(2) 1465/     833 : 16 AA               		ld	d,0AAh
+(2) 1466/     835 : 5E                  		ld	e,(hl)
+(2) 1467/     836 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1468/     839 : DD 5E 10            		ld	e,(ix+chnl_FmRegKeys)	; KEYS ON
+(2) 1469/     83C : 79                  		ld	a,c
+(2) 1470/     83D : E6 07               		and	111b
+(2) 1471/     83F : B3                  		or	e
+(2) 1472/     840 : 5F                  		ld	e,a
+(2) 1473/     841 : 16 28               		ld	d,28h
+(2) 1474/     843 : CD 78 0B            		call	SndDrv_FmSet_1
+(2) 1475/     846 : 1E 40               		ld	e,40h
+(2) 1476/     848 :                     .set_fm3reg:
+(2) 1477/     848 : 16 27               		ld	d,27h
+(2) 1478/     84A : C3 78 0B            		jp	SndDrv_FmSet_1
+(2) 1479/     84D :                      
+(2) 1480/     84D :                     ; ------------------------------------
+(2) 1481/     84D :                     ; Set FM frequency
+(2) 1482/     84D :                     ; 
+(2) 1483/     84D :                     ; hl - frequency
+(2) 1484/     84D :                     ; ------------------------------------
+(2) 1485/     84D :                     
+(2) 1486/     84D :                     .set_fm_freq:
+(2) 1487/     84D : DD 56 00            		ld	d,(ix+chnl_Chip)
+(2) 1488/     850 : DD 5E 0B            		ld	e,(ix+chnl_InsType)
+(2) 1489/     853 : 7A                  		ld	a,d
+(2) 1490/     854 : FE 06               		cp	6			; Check channel 6
+(2) 1491/     856 : C2 5D 08            		jp	nz,.no_chnl6f
+(2) 1492/     859 : 7B                  		ld	a,e
+(2) 1493/     85A : FE 02               		cp	2
+(2) 1494/     85C : C8                  		ret	z
+(2) 1495/     85D :                     ; 		jp	z,.play_sampl
+(2) 1496/     85D :                     .no_chnl6f:
+(2) 1497/     85D : 7A                  		ld	a,d
+(2) 1498/     85E : FE 02               		cp	2			; Check channel 3
+(2) 1499/     860 : C2 67 08            		jp	nz,.no_chnl3f
+(2) 1500/     863 : 7B                  		ld	a,e
+(2) 1501/     864 : FE 01               		cp	1			; CH3 OP regs are already
+(2) 1502/     866 : C8                  		ret	z			; set from the instrument data
+(2) 1503/     867 :                     .no_chnl3f:
+(2) 1504/     867 :                     
+(2) 1505/     867 : 5A                  		ld	e,d
+(2) 1506/     868 : DD 7E 02            		ld	a,(ix+chnl_Note)
+(2) 1507/     86B : FE F6               		cp	-10
+(2) 1508/     86D : CA 78 08            		jp	z,.set_keycut
+(2) 1509/     870 : FE FF               		cp	-1
+(2) 1510/     872 : C8                  		ret	z
+(2) 1511/     873 : FE FE               		cp	-2
+(2) 1512/     875 : C2 7C 08            		jp	nz,.no_keycut
+(2) 1513/     878 :                     .set_keycut:
+(2) 1514/     878 : 7A                  		ld	a,d
+(2) 1515/     879 : C3 57 07            		jp	.fm_settloff
+(2) 1516/     87C :                     .no_keycut:
+(2) 1517/     87C : 7B                  		ld	a,e
+(2) 1518/     87D : E6 03               		and	11b
+(2) 1519/     87F : 47                  		ld	b,a
+(2) 1520/     880 : 3E A4               		ld	a,0A4h
+(2) 1521/     882 : B0                  		or	b
+(2) 1522/     883 : 57                  		ld	d,a
+(2) 1523/     884 : 5C                  		ld	e,h
+(2) 1524/     885 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1525/     888 : 15                  		dec 	d
+(2) 1526/     889 : 15                  		dec 	d
+(2) 1527/     88A : 15                  		dec	d
+(2) 1528/     88B : 15                  		dec 	d
+(2) 1529/     88C : 5D                  		ld	e,l
+(2) 1530/     88D : C3 71 0B            		jp	SndDrv_FmAutoSet
+(2) 1531/     890 :                     
+(2) 1532/     890 :                     ; ------------------------------------
+(2) 1533/     890 :                     ; Set FM Volume
+(2) 1534/     890 :                     ; 
+(2) 1535/     890 :                     ; This one might blow your mind
+(2) 1536/     890 :                     ; ------------------------------------
+(2) 1537/     890 :                     
+(2) 1538/     890 :                     .set_fm_vol:
+(2) 1539/     890 : DD 7E 00            		ld	a,(ix+chnl_Chip)
+(2) 1540/     893 : 5F                  		ld	e,a
+(2) 1541/     894 : FE 06               		cp	6
+(2) 1542/     896 : C2 9F 08            		jp	nz,.notdac
+(2) 1543/     899 : DD 7E 0B            		ld	a,(ix+chnl_InsType)
+(2) 1544/     89C : FE 02               		cp	2
+(2) 1545/     89E : C8                  		ret	z
+(2) 1546/     89F :                     .notdac:
+(2) 1547/     89F : DD 66 08            		ld	h,(ix+(chnl_InsAddr+1))
+(2) 1548/     8A2 : DD 6E 07            		ld	l,(ix+chnl_InsAddr)
+(2) 1549/     8A5 : 7C                  		ld	a,h
+(2) 1550/     8A6 : B5                  		or	l
+(2) 1551/     8A7 : C8                  		ret	z
+(2) 1552/     8A8 : 23                  		inc 	hl			; Skip 30h
+(2) 1553/     8A9 : 23                  		inc 	hl
+(2) 1554/     8AA : 23                  		inc 	hl
+(2) 1555/     8AB : 23                  		inc 	hl
+(2) 1556/     8AC : 78                  		ld	a,b
+(2) 1557/     8AD : FE 40               		cp	40h
+(2) 1558/     8AF : DA B4 08            		jp	c,.too_much
+(2) 1559/     8B2 : 3E 40               		ld	a,40h
+(2) 1560/     8B4 :                     .too_much:
+(2) 1561/     8B4 : B7                  		or	a
+(2) 1562/     8B5 : F2 B9 08            		jp	p,.too_low
+(2) 1563/     8B8 : AF                  		xor	a
+(2) 1564/     8B9 :                     .too_low:
+(2) 1565/     8B9 : D6 40               		sub 	a,40h
+(2) 1566/     8BB : 2F                  		cpl
+(2) 1567/     8BC : 3C                  		inc 	a
+(2) 1568/     8BD : DD 77 11            		ld	(ix+chnl_FmVolBase),a
+(2) 1569/     8C0 : DD 4E 11            		ld	c,(ix+chnl_FmVolBase)
+(2) 1570/     8C3 : 16 40               		ld	d,40h			; 40h
+(2) 1571/     8C5 : DD 7E 00            		ld	a,(ix+chnl_Chip)
+(2) 1572/     8C8 : E6 03               		and	11b
+(2) 1573/     8CA : B2                  		or	d
+(2) 1574/     8CB : 57                  		ld	d,a
+(2) 1575/     8CC : DD 7E 0E            		ld	a,(ix+chnl_FmRegB0)
+(2) 1576/     8CF : E6 07               		and	111b
+(2) 1577/     8D1 : 47                  		ld	b,a
+(2) 1578/     8D2 : FE 07               		cp	7
+(2) 1579/     8D4 : C2 E3 08            		jp	nz,.tl_lv1
+(2) 1580/     8D7 : 7E                  		ld	a,(hl)
+(2) 1581/     8D8 : 81                  		add 	a,c
+(2) 1582/     8D9 : B7                  		or	a
+(2) 1583/     8DA : F2 DF 08            		jp	p,.tl_lv1_tm
+(2) 1584/     8DD : 3E 7F               		ld	a,7Fh
+(2) 1585/     8DF :                     .tl_lv1_tm:
+(2) 1586/     8DF : 5F                  		ld	e,a
+(2) 1587/     8E0 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1588/     8E3 :                     .tl_lv1:
+(2) 1589/     8E3 : 23                  		inc 	hl
+(2) 1590/     8E4 : 14                  		inc 	d
+(2) 1591/     8E5 : 14                  		inc 	d
+(2) 1592/     8E6 : 14                  		inc 	d
+(2) 1593/     8E7 : 14                  		inc 	d
+(2) 1594/     8E8 : 78                  		ld	a,b
+(2) 1595/     8E9 : FE 07               		cp	7
+(2) 1596/     8EB : CA F8 08            		jp	z,.tl_lv2_ok
+(2) 1597/     8EE : FE 06               		cp	6
+(2) 1598/     8F0 : CA F8 08            		jp	z,.tl_lv2_ok
+(2) 1599/     8F3 : FE 05               		cp	5
+(2) 1600/     8F5 : C2 04 09            		jp	nz,.tl_lv2
+(2) 1601/     8F8 :                     .tl_lv2_ok:
+(2) 1602/     8F8 : 7E                  		ld	a,(hl)
+(2) 1603/     8F9 : 81                  		add 	a,c
+(2) 1604/     8FA : B7                  		or	a
+(2) 1605/     8FB : F2 00 09            		jp	p,.tl_lv2_tm
+(2) 1606/     8FE : 3E 7F               		ld	a,7Fh
+(2) 1607/     900 :                     .tl_lv2_tm:
+(2) 1608/     900 : 5F                  		ld	e,a
+(2) 1609/     901 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1610/     904 :                     .tl_lv2:
+(2) 1611/     904 : 23                  		inc 	hl
+(2) 1612/     905 : 14                  		inc 	d
+(2) 1613/     906 : 14                  		inc 	d
+(2) 1614/     907 : 14                  		inc 	d
+(2) 1615/     908 : 14                  		inc 	d
+(2) 1616/     909 : 78                  		ld	a,b
+(2) 1617/     90A : E6 04               		and	100b
+(2) 1618/     90C : B7                  		or	a
+(2) 1619/     90D : CA 1C 09            		jp	z,.tl_lv3
+(2) 1620/     910 : 7E                  		ld	a,(hl)
+(2) 1621/     911 : 81                  		add 	a,c
+(2) 1622/     912 : B7                  		or	a
+(2) 1623/     913 : F2 18 09            		jp	p,.tl_lv3_tm
+(2) 1624/     916 : 3E 7F               		ld	a,7Fh
+(2) 1625/     918 :                     .tl_lv3_tm:
+(2) 1626/     918 : 5F                  		ld	e,a
+(2) 1627/     919 : CD 71 0B            		call	SndDrv_FmAutoSet
+(2) 1628/     91C :                     .tl_lv3:
+(2) 1629/     91C : 23                  		inc 	hl
+(2) 1630/     91D : 14                  		inc 	d
+(2) 1631/     91E : 14                  		inc 	d
+(2) 1632/     91F : 14                  		inc 	d
+(2) 1633/     920 : 14                  		inc 	d
+(2) 1634/     921 : 7E                  		ld	a,(hl)
+(2) 1635/     922 : 81                  		add 	a,c
+(2) 1636/     923 : B7                  		or	a
+(2) 1637/     924 : F2 29 09            		jp	p,.tl_lv4_tm
+(2) 1638/     927 : 3E 7F               		ld	a,7Fh
+(2) 1639/     929 :                     .tl_lv4_tm:
+(2) 1640/     929 : 5F                  		ld	e,a
+(2) 1641/     92A : 23                  		inc 	hl
+(2) 1642/     92B : C3 71 0B            		jp	SndDrv_FmAutoSet
+(2) 1643/     92E :                     
+(2) 1644/     92E :                     ; ------------------------------------
+(2) 1645/     92E :                     
+(2) 1646/     92E :                     .set_sampl:
+(2) 1647/     92E : DD 66 08            		ld	h,(ix+(chnl_InsAddr+1))
+(2) 1648/     931 : DD 6E 07            		ld	l,(ix+chnl_InsAddr)
+(2) 1649/     934 :                     
+(2) 1650/     934 : 5E                  		ld	e,(hl)
+(2) 1651/     935 : 23                  		inc 	hl
+(2) 1652/     936 : 56                  		ld	d,(hl)
+(2) 1653/     937 : 23                  		inc 	hl
+(2) 1654/     938 : 7E                  		ld	a,(hl)
+(2) 1655/     939 : 23                  		inc 	hl
+(2) 1656/     93A : ED 53 24 00         		ld	(Sample_Start),de
+(2) 1657/     93E : 32 26 00            		ld	(Sample_Start+2),a
+(2) 1658/     941 :                     
+(2) 1659/     941 : 5E                  		ld	e,(hl)
+(2) 1660/     942 : 23                  		inc 	hl
+(2) 1661/     943 : 56                  		ld	d,(hl)
+(2) 1662/     944 : 23                  		inc 	hl
+(2) 1663/     945 : 7E                  		ld	a,(hl)
+(2) 1664/     946 : 23                  		inc 	hl
+(2) 1665/     947 : ED 53 27 00         		ld	(Sample_End),de
+(2) 1666/     94B : 32 29 00            		ld	(Sample_End+2),a
+(2) 1667/     94E :                     		
+(2) 1668/     94E : 5E                  		ld	e,(hl)
+(2) 1669/     94F : 23                  		inc 	hl
+(2) 1670/     950 : 56                  		ld	d,(hl)
+(2) 1671/     951 : 23                  		inc 	hl
+(2) 1672/     952 : 7E                  		ld	a,(hl)
+(2) 1673/     953 : 23                  		inc 	hl
+(2) 1674/     954 : ED 53 2A 00         		ld	(Sample_Loop),de
+(2) 1675/     958 : 32 2C 00            		ld	(Sample_Loop+2),a
+(2) 1676/     95B :                     		
+(2) 1677/     95B : 7E                  		ld	a,(hl)
+(2) 1678/     95C : DD 77 15            		ld	(ix+chnl_SmplFlags),a
+(2) 1679/     95F : C9                  		ret
+(2) 1680/     960 :                     		
+(2) 1681/     960 :                     ; --------------------------------------------
+(2) 1682/     960 :                     ; Set PSG Volume
+(2) 1683/     960 :                     ; --------------------------------------------
+(2) 1684/     960 :                     
+(2) 1685/     960 :                     .set_psg_vol:
+(2) 1686/     960 : 1E 00               		ld	e,0
+(2) 1687/     962 : FE 40               		cp	40h
+(2) 1688/     964 : DA 69 09            		jp	c,.pntoo_much
+(2) 1689/     967 : 3E 40               		ld	a,40h
+(2) 1690/     969 :                     .pntoo_much:
+(2) 1691/     969 : B7                  		or	a
+(2) 1692/     96A : F2 6E 09            		jp	p,.pntoo_low
+(2) 1693/     96D : AF                  		xor	a
+(2) 1694/     96E :                     .pntoo_low:
+(2) 1695/     96E : FE 40               		cp	40h
+(2) 1696/     970 : CA 7A 09            		jp	z,.pntoppsgv
+(2) 1697/     973 : 3D                  		dec 	a
+(2) 1698/     974 : 0F                  		rrca
+(2) 1699/     975 : 0F                  		rrca
+(2) 1700/     976 : 2F                  		cpl
+(2) 1701/     977 : E6 0F               		and	00001111b
+(2) 1702/     979 : 5F                  		ld	e,a
+(2) 1703/     97A :                     .pntoppsgv:
+(2) 1704/     97A : DD 73 12            		ld	(ix+chnl_PsgVolBase),e
+(2) 1705/     97D : C9                  		ret
+(2) 1706/     97E :                     
+(2) 1707/     97E :                     ; --------------------------------------------
+(2) 1708/     97E :                     ; Set PSG Frequency
+(2) 1709/     97E :                     ; 
+(2) 1710/     97E :                     ; hl - frequency
+(2) 1711/     97E :                     ; --------------------------------------------
+(2) 1712/     97E :                     
+(2) 1713/     97E :                     .set_psg_freq:
+(2) 1714/     97E : DD 7E 00            		ld	a,(ix+chnl_Chip)
+(2) 1715/     981 : E6 E0               		and	11100000b
+(2) 1716/     983 : 47                  		ld	b,a
+(2) 1717/     984 : FE C0               		cp	0C0h
+(2) 1718/     986 : C2 91 09            		jp	nz,.not_nse3
+(2) 1719/     989 : FD 7E 0C            		ld	a,(iy+trck_PsgNoise)
+(2) 1720/     98C : E6 03               		and	3
+(2) 1721/     98E : FE 03               		cp	3
+(2) 1722/     990 : C8                  		ret	z
+(2) 1723/     991 :                     .not_nse3:
+(2) 1724/     991 : 78                  		ld	a,b
+(2) 1725/     992 : FE E0               		cp	0E0h
+(2) 1726/     994 : C2 A1 09            		jp	nz,.not_nse
+(2) 1727/     997 : DD 7E 0B            		ld	a,(ix+chnl_InsType)
+(2) 1728/     99A : E6 03               		and	011b
+(2) 1729/     99C : FE 03               		cp	3
+(2) 1730/     99E : C0                  		ret	nz
+(2) 1731/     99F : 06 C0               		ld	b,0C0h
+(2) 1732/     9A1 :                     .not_nse:
+(2) 1733/     9A1 : 7C                  		ld	a,h
+(2) 1734/     9A2 : B5                  		or	l
+(2) 1735/     9A3 : C8                  		ret	z
+(2) 1736/     9A4 :                     		
+(2) 1737/     9A4 : 7D                  		ld	a,l
+(2) 1738/     9A5 : 57                  		ld	d,a
+(2) 1739/     9A6 : E6 0F               		and 	00001111b
+(2) 1740/     9A8 : B0                  		or	b
+(2) 1741/     9A9 : 5F                  		ld	e,a
+(2) 1742/     9AA : 7D                  		ld	a,l
+(2) 1743/     9AB : 0F                  		rrca
+(2) 1744/     9AC : 0F                  		rrca
+(2) 1745/     9AD : 0F                  		rrca
+(2) 1746/     9AE : 0F                  		rrca
+(2) 1747/     9AF : E6 0F               		and	00001111b
+(2) 1748/     9B1 : 57                  		ld	d,a
+(2) 1749/     9B2 : 7C                  		ld	a,h
+(2) 1750/     9B3 : 0F                  		rrca
+(2) 1751/     9B4 : 0F                  		rrca
+(2) 1752/     9B5 : 0F                  		rrca
+(2) 1753/     9B6 : 0F                  		rrca
+(2) 1754/     9B7 : E6 30               		and	00110000b
+(2) 1755/     9B9 : B2                  		or	d
+(2) 1756/     9BA : DD 77 1D            		ld	(ix+(chnl_PsgOutFreq+1)),a
+(2) 1757/     9BD : DD 73 1C            		ld	(ix+chnl_PsgOutFreq),e
+(2) 1758/     9C0 : C9                  		ret
+(2) 1759/     9C1 :                     
+(2) 1760/     9C1 :                     ; --------------------------------
+(2) 1761/     9C1 :                     ; Run effects
+(2) 1762/     9C1 :                     ; 
+(2) 1763/     9C1 :                     ; apply effects on the channels
+(2) 1764/     9C1 :                     ; if unlocked
+(2) 1765/     9C1 :                     ; --------------------------------
+(2) 1766/     9C1 :                     
+(2) 1767/     9C1 :                     .run_effect:
+(2) 1768/     9C1 : 11 00 00            		ld	de,0
+(2) 1769/     9C4 : DD 7E 05            		ld	a,(ix+chnl_EffId)
+(2) 1770/     9C7 : 87                  		add 	a,a
+(2) 1771/     9C8 : E6 FE               		and	11111110b
+(2) 1772/     9CA : 5F                  		ld	e,a
+(2) 1773/     9CB : 21 DA 09            		ld	hl,.list_doeff
+(2) 1774/     9CE : 19                  		add	hl,de
+(2) 1775/     9CF : DD 46 00            		ld	b,(ix+chnl_Chip)
+(2) 1776/     9D2 : DD 4E 06            		ld	c,(ix+chnl_EffArg)
+(2) 1777/     9D5 : 7E                  		ld	a,(hl)
+(2) 1778/     9D6 : 23                  		inc	hl
+(2) 1779/     9D7 : 66                  		ld	h,(hl)
+(2) 1780/     9D8 : 6F                  		ld	l,a
+(2) 1781/     9D9 : E9                  		jp	(hl)
+(2) 1782/     9DA :                     .list_doeff:
+(2) 1783/     9DA : 9A 05               		dw .eff_null
+(2) 1784/     9DC : 9A 05               		dw .eff_null	; A | Set ticks
+(2) 1785/     9DE : 9A 05               		dw .eff_null	; B | Jump to block
+(2) 1786/     9E0 : 9A 05               		dw .eff_null	; C | Break to row (not possible here)
+(2) 1787/     9E2 : 10 0A               		dw .set_D	; D | Volume slide
+(2) 1788/     9E4 : 2A 0A               		dw .set_E_F	; E
+(2) 1789/     9E6 : 2A 0A               		dw .set_E_F	; F
+(2) 1790/     9E8 : 9A 05               		dw .eff_null	; G
+(2) 1791/     9EA : 9A 05               		dw .eff_null	; H
+(2) 1792/     9EC : 9A 05               		dw .eff_null	; I
+(2) 1793/     9EE : 9A 05               		dw .eff_null	; J	
+(2) 1794/     9F0 : 9A 05               		dw .eff_null	; K
+(2) 1795/     9F2 : 9A 05               		dw .eff_null	; L
+(2) 1796/     9F4 : 9A 05               		dw .eff_null	; M
+(2) 1797/     9F6 : 9A 05               		dw .eff_null	; N
+(2) 1798/     9F8 : 9A 05               		dw .eff_null	; O
+(2) 1799/     9FA : 9A 05               		dw .eff_null	; P
+(2) 1800/     9FC : 9A 05               		dw .eff_null	; Q
+(2) 1801/     9FE : 9A 05               		dw .eff_null	; R
+(2) 1802/     A00 : 9A 05               		dw .eff_null	; S
+(2) 1803/     A02 : 9A 05               		dw .eff_null	; T
+(2) 1804/     A04 : 9A 05               		dw .eff_null	; U
+(2) 1805/     A06 : 9A 05               		dw .eff_null	; V
+(2) 1806/     A08 : 9A 05               		dw .eff_null	; W
+(2) 1807/     A0A : 65 0A               		dw .set_X	; X
+(2) 1808/     A0C : 9A 05               		dw .eff_null	; Y
+(2) 1809/     A0E : 9A 05               		dw .eff_null	; Z
+(2) 1810/     A10 :                     
+(2) 1811/     A10 :                     ; ------------------------------------
+(2) 1812/     A10 :                     ; Effect D - Volume slide
+(2) 1813/     A10 :                     ; ------------------------------------
+(2) 1814/     A10 :                     
+(2) 1815/     A10 :                     .set_D:
+(2) 1816/     A10 : DD 7E 17            		ld	a,(ix+chnl_EfNewVol)
+(2) 1817/     A13 : DD 86 16            		add 	a,(ix+chnl_EfVolSlide)
+(2) 1818/     A16 : DD 77 17            		ld	(ix+chnl_EfNewVol),a
+(2) 1819/     A19 : CB 78               		bit	7,b
+(2) 1820/     A1B : C2 24 0A            		jp	nz,.setpsg_vol
+(2) 1821/     A1E : DD 46 17            		ld	b,(ix+chnl_EfNewVol)
+(2) 1822/     A21 : C3 90 08            		jp	.set_fm_vol
+(2) 1823/     A24 :                     .setpsg_vol:
+(2) 1824/     A24 : DD 7E 17            		ld	a,(ix+chnl_EfNewVol)
+(2) 1825/     A27 : C3 60 09            		jp	.set_psg_vol
+(2) 1826/     A2A :                     
+(2) 1827/     A2A :                     ; ------------------------------------
+(2) 1828/     A2A :                     ; Effect E - Portametro down
+(2) 1829/     A2A :                     ; ------------------------------------
+(2) 1830/     A2A :                     
+(2) 1831/     A2A :                     .set_E_F:
+(2) 1832/     A2A : DD CB 00 7E         		bit	7,(ix+chnl_Chip)
+(2) 1833/     A2E : C2 47 0A            		jp	nz,.psg_EF
+(2) 1834/     A31 :                     		
+(2) 1835/     A31 : DD 56 19            		ld	d,(ix+(chnl_EfPortam+1))
+(2) 1836/     A34 : DD 5E 18            		ld	e,(ix+chnl_EfPortam)
+(2) 1837/     A37 : DD 66 1B            		ld	h,(ix+(chnl_EfNewFreq+1))
+(2) 1838/     A3A : DD 6E 1A            		ld	l,(ix+chnl_EfNewFreq)
+(2) 1839/     A3D : 19                  		add 	hl,de
+(2) 1840/     A3E : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
+(2) 1841/     A41 : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
+(2) 1842/     A44 : C3 4D 08            		jp	.set_fm_freq
+(2) 1843/     A47 :                     
+(2) 1844/     A47 :                     .psg_EF:
+(2) 1845/     A47 : DD 56 19            		ld	d,(ix+(chnl_EfPortam+1))
+(2) 1846/     A4A : DD 5E 18            		ld	e,(ix+chnl_EfPortam)
+(2) 1847/     A4D : DD 66 1B            		ld	h,(ix+(chnl_EfNewFreq+1))
+(2) 1848/     A50 : DD 6E 1A            		ld	l,(ix+chnl_EfNewFreq)
+(2) 1849/     A53 : 37                  		scf
+(2) 1850/     A54 : ED 52               		sbc 	hl,de
+(2) 1851/     A56 : F2 5C 0A            		jp	p,.toolow
+(2) 1852/     A59 : 21 00 00            		ld	hl,0
+(2) 1853/     A5C :                     .toolow:
+(2) 1854/     A5C : DD 74 1B            		ld	(ix+(chnl_EfNewFreq+1)),h
+(2) 1855/     A5F : DD 75 1A            		ld	(ix+chnl_EfNewFreq),l
+(2) 1856/     A62 : C3 7E 09            		jp	.set_psg_freq
+(2) 1857/     A65 :                     		
+(2) 1858/     A65 :                     ; ------------------------------------
+(2) 1859/     A65 :                     ; Effect X - Set panning (FM ONLY)
+(2) 1860/     A65 :                     ; ------------------------------------
+(2) 1861/     A65 :                     
+(2) 1862/     A65 :                     .set_X:
+(2) 1863/     A65 : 16 B4               		ld	d,0B4h
+(2) 1864/     A67 : DD 7E 00            		ld	a,(ix+chnl_Chip)
+(2) 1865/     A6A : E6 03               		and	11b
+(2) 1866/     A6C : B2                  		or	d
+(2) 1867/     A6D : 57                  		ld	d,a
+(2) 1868/     A6E : DD 7E 0F            		ld	a,(ix+chnl_FmRegB4)
+(2) 1869/     A71 : DD B6 0D            		or	(ix+chnl_FmPan)
+(2) 1870/     A74 : 5F                  		ld	e,a
+(2) 1871/     A75 : C3 71 0B            		jp	SndDrv_FmAutoSet
+(2) 1872/     A78 :                     
+(2) 1873/     A78 :                     ; ===================================================================
+(2) 1874/     A78 :                     ; ----------------------------------------------------
+(2) 1875/     A78 :                     ; Subs
+(2) 1876/     A78 :                     ; ----------------------------------------------------
+(2) 1877/     A78 :                     
+(2) 1878/     A78 :                     ; ------------------------------------
+(2) 1879/     A78 :                     ; Track request
+(2) 1880/     A78 :                     ; ------------------------------------
+(2) 1881/     A78 :                     
+(2) 1882/     A78 :                     SndDrv_ReqTrack:
+(2) 1883/     A78 : FD 7E 0A            		ld	a,(iy+trck_ReqFlag)
+(2) 1884/     A7B : FD 36 0A 00         		ld	(iy+trck_ReqFlag),0
+(2) 1885/     A7F : FD 36 0C E0         		ld	(iy+trck_PsgNoise),0E0h
+(2) 1886/     A83 : 07                  		rlca
+(2) 1887/     A84 : E6 FE               		and	11111110b
+(2) 1888/     A86 : 11 00 00            		ld	de,0
+(2) 1889/     A89 : 5F                  		ld	e,a
+(2) 1890/     A8A : 21 93 0A            		ld	hl,.req_list
+(2) 1891/     A8D : 19                  		add	hl,de
+(2) 1892/     A8E : 7E                  		ld	a,(hl)
+(2) 1893/     A8F : 23                  		inc	hl
+(2) 1894/     A90 : 66                  		ld	h,(hl)
+(2) 1895/     A91 : 6F                  		ld	l,a
+(2) 1896/     A92 : E9                  		jp	(hl)
+(2) 1897/     A93 :                     .req_list:
+(2) 1898/     A93 : 00 00               		dw 0
+(2) 1899/     A95 : 99 0A               		dw .req01
+(2) 1900/     A97 : F2 0A               		dw .req02
+(2) 1901/     A99 :                     
+(2) 1902/     A99 :                     ; ------------------------------------
+(2) 1903/     A99 :                     ; Flag 01h
+(2) 1904/     A99 :                     ; ------------------------------------
+(2) 1905/     A99 :                     
+(2) 1906/     A99 :                     .req01:
+(2) 1907/     A99 : FD 46 00            		ld	b,(iy+trck_ReqBlk)		; Copy addresses
+(2) 1908/     A9C : FD 4E 01            		ld	c,(iy+(trck_ReqBlk+1))
+(2) 1909/     A9F : FD 56 02            		ld	d,(iy+trck_ReqPatt)
+(2) 1910/     AA2 : FD 5E 03            		ld	e,(iy+(trck_ReqPatt+1))
+(2) 1911/     AA5 : FD 66 04            		ld	h,(iy+trck_ReqIns)
+(2) 1912/     AA8 : FD 6E 05            		ld	l,(iy+(trck_ReqIns+1))
+(2) 1913/     AAB : FD 70 12            		ld	(iy+trck_Blocks),b
+(2) 1914/     AAE : FD 71 13            		ld	(iy+(trck_Blocks+1)),c
+(2) 1915/     AB1 : FD 72 14            		ld	(iy+trck_PattBase),d
+(2) 1916/     AB4 : FD 73 15            		ld	(iy+(trck_PattBase+1)),e
+(2) 1917/     AB7 : FD 72 18            		ld	(iy+trck_PattRead),d
+(2) 1918/     ABA : FD 73 19            		ld	(iy+(trck_PattRead+1)),e
+(2) 1919/     ABD : FD 74 16            		ld	(iy+trck_Instr),h
+(2) 1920/     AC0 : FD 75 17            		ld	(iy+(trck_Instr+1)),l
+(2) 1921/     AC3 : FD 56 06            		ld	d,(iy+trck_ReqTicks)		; Tempo and ticks
+(2) 1922/     AC6 : FD 4E 07            		ld	c,(iy+trck_ReqTempo)
+(2) 1923/     AC9 : FD 46 08            		ld	b,(iy+trck_ReqCurrBlk)
+(2) 1924/     ACC : FD 7E 09            		ld	a,(iy+trck_ReqSndBnk)
+(2) 1925/     ACF : FD 72 1F            		ld	(iy+trck_TicksCurr),d
+(2) 1926/     AD2 : FD 72 1C            		ld	(iy+trck_TicksMain),d
+(2) 1927/     AD5 : FD 72 0D            		ld	(iy+trck_TicksRead),d
+(2) 1928/     AD8 : FD 71 1D            		ld	(iy+trck_TempoBits),c
+(2) 1929/     ADB : FD 70 0E            		ld	(iy+trck_BlockCurr),b
+(2) 1930/     ADE : 32 32 00            		ld	(curr_SndBank),a
+(2) 1931/     AE1 : AF                  		xor	a
+(2) 1932/     AE2 : FD 77 1A            		ld	(iy+trck_RowSteps),a
+(2) 1933/     AE5 : FD 77 1B            		ld	(iy+(trck_RowSteps+1)),a		
+(2) 1934/     AE8 : FD 77 1E            		ld	(iy+trck_RowWait),a
+(2) 1935/     AEB : 3C                  		inc 	a
+(2) 1936/     AEC : FD 77 11            		ld	(iy+trck_Active),a
+(2) 1937/     AEF : C3 F6 0A            		jp	SndDrv_ResetChan
+(2) 1938/     AF2 :                     		
+(2) 1939/     AF2 :                     ; ------------------------------------
+(2) 1940/     AF2 :                     ; Flag 02h
+(2) 1941/     AF2 :                     ; ------------------------------------
+(2) 1942/     AF2 :                     
+(2) 1943/     AF2 :                     .req02:
+(2) 1944/     AF2 : AF                  		xor	a
+(2) 1945/     AF3 : FD 77 11            		ld	(iy+trck_Active),a
+(2) 1946/     AF6 :                     
+(2) 1947/     AF6 :                     ; ------------------------------------
+(2) 1948/     AF6 :                     ; Reset channels and silence them
+(2) 1949/     AF6 :                     ; ------------------------------------
+(2) 1950/     AF6 :                     
+(2) 1951/     AF6 :                     SndDrv_ResetChan:
+(2) 1952/     AF6 : 21 F0 10            		ld	hl,SndBuff_UsedChnls
+(2) 1953/     AF9 : FD 7E 10            		ld	a,(iy+trck_Priority)
+(2) 1954/     AFC : B7                  		or	a
+(2) 1955/     AFD : CA 03 0B            		jp	z,.lowprio
+(2) 1956/     B00 : 21 04 11            		ld	hl,SndBuff_UsedChnls_2
+(2) 1957/     B03 :                     .lowprio:
+(2) 1958/     B03 : 06 0A               		ld	b,MAX_CHNLS
+(2) 1959/     B05 : AF                  		xor	a
+(2) 1960/     B06 :                     .nexttype:
+(2) 1961/     B06 : 77                  		ld	(hl),a
+(2) 1962/     B07 : 23                  		inc 	hl
+(2) 1963/     B08 : 10 FC               		djnz	.nexttype
+(2) 1964/     B0A : DD E5               		push	ix
+(2) 1965/     B0C : 06 0A               		ld	b,MAX_CHNLS
+(2) 1966/     B0E : AF                  		xor	a
+(2) 1967/     B0F : 11 20 00            		ld	de,20h
+(2) 1968/     B12 :                     .initchnls:
+(2) 1969/     B12 : DD 36 01 00         		ld	(ix+chnl_Type),0		; Note request
+(2) 1970/     B16 : DD 36 02 FE         		ld	(ix+chnl_Note),-2		; Set Note off
+(2) 1971/     B1A : DD 36 04 40         		ld	(ix+chnl_Vol),64		; Max volume
+(2) 1972/     B1E : DD 36 17 40         		ld	(ix+chnl_EfNewVol),64
+(2) 1973/     B22 : DD 36 0D C0         		ld	(ix+chnl_FmPan),0C0h
+(2) 1974/     B26 : DD 77 0B            		ld	(ix+chnl_InsType),a
+(2) 1975/     B29 : DD 77 0C            		ld	(ix+chnl_InsOpt),a
+(2) 1976/     B2C : DD 77 16            		ld	(ix+chnl_EfVolSlide),a
+(2) 1977/     B2F : DD 77 13            		ld	(ix+chnl_PsgVolEnv),a
+(2) 1978/     B32 : DD 77 14            		ld	(ix+chnl_PsgIndx),a
+(2) 1979/     B35 : DD 19               		add 	ix,de
+(2) 1980/     B37 : 10 D9               		djnz	.initchnls
+(2) 1981/     B39 : DD E1               		pop	ix
+(2) 1982/     B3B :                     		
+(2) 1983/     B3B :                     ; ------------------------------------
+(2) 1984/     B3B :                     
+(2) 1985/     B3B : DD E5               		push	ix
+(2) 1986/     B3D : 11 04 11            		ld	de,SndBuff_UsedChnls_2
+(2) 1987/     B40 : 21 F0 10            		ld	hl,SndBuff_UsedChnls
+(2) 1988/     B43 : 06 0A               		ld	b,MAX_CHNLS			; FM channels
+(2) 1989/     B45 :                     .nxtfmchnl:
+(2) 1990/     B45 : C5                  		push	bc
+(2) 1991/     B46 : 1A                  		ld	a,(de)
+(2) 1992/     B47 : 4E                  		ld	c,(hl)
+(2) 1993/     B48 : B1                  		or	c
+(2) 1994/     B49 : B7                  		or	a
+(2) 1995/     B4A : C2 64 0B            		jp	nz,.dontvolfm
+(2) 1996/     B4D : DD 7E 00            		ld	a,(ix+chnl_Chip)
+(2) 1997/     B50 : B7                  		or	a
+(2) 1998/     B51 : F2 5C 0B            		jp	p,.fm_shut
+(2) 1999/     B54 : F6 1F               		or	01Fh
+(2) 2000/     B56 : 32 11 7F            		ld	(zpsg_ctrl),a
+(2) 2001/     B59 : C3 64 0B            		jp	.dontvolfm
+(2) 2002/     B5C :                     .fm_shut:
+(2) 2003/     B5C : D5                  		push 	de
+(2) 2004/     B5D : 16 28               		ld	d,28h
+(2) 2005/     B5F : 5F                  		ld	e,a
+(2) 2006/     B60 : CD 78 0B            		call	SndDrv_FmSet_1
+(2) 2007/     B63 : D1                  		pop	de
+(2) 2008/     B64 :                     .dontvolfm:
+(2) 2009/     B64 : 23                  		inc 	hl
+(2) 2010/     B65 : 13                  		inc 	de
+(2) 2011/     B66 : 01 20 00            		ld	bc,20h
+(2) 2012/     B69 : DD 09               		add 	ix,bc
+(2) 2013/     B6B : C1                  		pop	bc
+(2) 2014/     B6C : 10 D7               		djnz	.nxtfmchnl
+(2) 2015/     B6E : DD E1               		pop	ix
+(2) 2016/     B70 : C9                  		ret
+(2) 2017/     B71 :                     
+(2) 2018/     B71 :                     ; ---------------------------------------------
+(2) 2019/     B71 :                     ; FM send registers
+(2) 2020/     B71 :                     ; 
+(2) 2021/     B71 :                     ; Input:
+(2) 2022/     B71 :                     ; d - ctrl
+(2) 2023/     B71 :                     ; e - data
+(2) 2024/     B71 :                     ; c - channel
+(2) 2025/     B71 :                     ; ---------------------------------------------
+(2) 2026/     B71 :                     
+(2) 2027/     B71 :                     SndDrv_FmAutoSet:
+(2) 2028/     B71 : DD CB 00 56         		bit 	2,(ix+chnl_Chip)
+(2) 2029/     B75 : C2 83 0B            		jp	nz,SndDrv_FmSet_2
+(2) 2030/     B78 :                     		
+(2) 2031/     B78 :                     SndDrv_FmSet_1:
+(2) 2032/     B78 : 7A                  		ld	a,d
+(2) 2033/     B79 : 32 00 40            		ld	(Zym_ctrl_1),a
+(2) 2034/     B7C : 00                  		nop
+(2) 2035/     B7D : 7B                  		ld	a,e
+(2) 2036/     B7E : 32 01 40            		ld	(Zym_data_1),a
+(2) 2037/     B81 : 00                  		nop
+(2) 2038/     B82 : C9                  		ret
+(2) 2039/     B83 :                     
+(2) 2040/     B83 :                     SndDrv_FmSet_2:
+(2) 2041/     B83 : 7A                  		ld	a,d
+(2) 2042/     B84 : 32 02 40            		ld	(Zym_ctrl_2),a
+(2) 2043/     B87 : 00                  		nop
+(2) 2044/     B88 : 7B                  		ld	a,e
+(2) 2045/     B89 : 32 03 40            		ld	(Zym_data_2),a
+(2) 2046/     B8C : 00                  		nop
+(2) 2047/     B8D : C9                  		ret
+(2) 2048/     B8E :                     
+(2) 2049/     B8E :                     ; ====================================================================
+(2) 2050/     B8E : 84 02               fmFreq_List:	dw 644			; C-0
+(2) 2051/     B90 : A9 02               		dw 681
+(2) 2052/     B92 : D2 02               		dw 722
+(2) 2053/     B94 : FD 02               		dw 765
+(2) 2054/     B96 : 2A 03               		dw 810
+(2) 2055/     B98 : 5A 03               		dw 858
+(2) 2056/     B9A : 8E 03               		dw 910
+(2) 2057/     B9C : C4 03               		dw 964
+(2) 2058/     B9E : FD 03               		dw 1021
+(2) 2059/     BA0 : 39 04               		dw 1081
+(2) 2060/     BA2 : 7A 04               		dw 1146
+(2) 2061/     BA4 : BE 04               		dw 1214
+(2) 2062/     BA6 : 84 0A               		dw 644|800h		; C-1
+(2) 2063/     BA8 : A9 0A               		dw 681|800h
+(2) 2064/     BAA : D2 0A               		dw 722|800h
+(2) 2065/     BAC : FD 0A               		dw 765|800h
+(2) 2066/     BAE : 2A 0B               		dw 810|800h
+(2) 2067/     BB0 : 5A 0B               		dw 858|800h
+(2) 2068/     BB2 : 8E 0B               		dw 910|800h
+(2) 2069/     BB4 : C4 0B               		dw 964|800h
+(2) 2070/     BB6 : FD 0B               		dw 1021|800h
+(2) 2071/     BB8 : 39 0C               		dw 1081|800h
+(2) 2072/     BBA : 7A 0C               		dw 1146|800h
+(2) 2073/     BBC : BE 0C               		dw 1214|800h
+(2) 2074/     BBE : 84 12               		dw 644|1000h		; C-2
+(2) 2075/     BC0 : A9 12               		dw 681|1000h
+(2) 2076/     BC2 : D2 12               		dw 722|1000h
+(2) 2077/     BC4 : FD 12               		dw 765|1000h
+(2) 2078/     BC6 : 2A 13               		dw 810|1000h
+(2) 2079/     BC8 : 5A 13               		dw 858|1000h
+(2) 2080/     BCA : 8E 13               		dw 910|1000h
+(2) 2081/     BCC : C4 13               		dw 964|1000h
+(2) 2082/     BCE : FD 13               		dw 1021|1000h
+(2) 2083/     BD0 : 39 14               		dw 1081|1000h
+(2) 2084/     BD2 : 7A 14               		dw 1146|1000h
+(2) 2085/     BD4 : BE 14               		dw 1214|1000h
+(2) 2086/     BD6 : 84 1A               		dw 644|1800h		; C-3
+(2) 2087/     BD8 : A9 1A               		dw 681|1800h
+(2) 2088/     BDA : D2 1A               		dw 722|1800h
+(2) 2089/     BDC : FD 1A               		dw 765|1800h
+(2) 2090/     BDE : 2A 1B               		dw 810|1800h
+(2) 2091/     BE0 : 5A 1B               		dw 858|1800h
+(2) 2092/     BE2 : 8E 1B               		dw 910|1800h
+(2) 2093/     BE4 : C4 1B               		dw 964|1800h
+(2) 2094/     BE6 : FD 1B               		dw 1021|1800h
+(2) 2095/     BE8 : 39 1C               		dw 1081|1800h
+(2) 2096/     BEA : 7A 1C               		dw 1146|1800h
+(2) 2097/     BEC : BE 1C               		dw 1214|1800h
+(2) 2098/     BEE : 84 22               		dw 644|2000h		; C-4
+(2) 2099/     BF0 : A9 22               		dw 681|2000h
+(2) 2100/     BF2 : D2 22               		dw 722|2000h
+(2) 2101/     BF4 : FD 22               		dw 765|2000h
+(2) 2102/     BF6 : 2A 23               		dw 810|2000h
+(2) 2103/     BF8 : 5A 23               		dw 858|2000h
+(2) 2104/     BFA : 8E 23               		dw 910|2000h
+(2) 2105/     BFC : C4 23               		dw 964|2000h
+(2) 2106/     BFE : FD 23               		dw 1021|2000h
+(2) 2107/     C00 : 39 24               		dw 1081|2000h
+(2) 2108/     C02 : 7A 24               		dw 1146|2000h
+(2) 2109/     C04 : BE 24               		dw 1214|2000h
+(2) 2110/     C06 : 84 2A               		dw 644|2800h		; C-5
+(2) 2111/     C08 : A9 2A               		dw 681|2800h
+(2) 2112/     C0A : D2 2A               		dw 722|2800h
+(2) 2113/     C0C : FD 2A               		dw 765|2800h
+(2) 2114/     C0E : 2A 2B               		dw 810|2800h
+(2) 2115/     C10 : 5A 2B               		dw 858|2800h
+(2) 2116/     C12 : 8E 2B               		dw 910|2800h
+(2) 2117/     C14 : C4 2B               		dw 964|2800h
+(2) 2118/     C16 : FD 2B               		dw 1021|2800h
+(2) 2119/     C18 : 39 2C               		dw 1081|2800h
+(2) 2120/     C1A : 7A 2C               		dw 1146|2800h
+(2) 2121/     C1C : BE 2C               		dw 1214|2800h		
+(2) 2122/     C1E : 84 32               		dw 644|3000h		; C-6
+(2) 2123/     C20 : A9 32               		dw 681|3000h
+(2) 2124/     C22 : D2 32               		dw 722|3000h
+(2) 2125/     C24 : FD 32               		dw 765|3000h
+(2) 2126/     C26 : 2A 33               		dw 810|3000h
+(2) 2127/     C28 : 5A 33               		dw 858|3000h
+(2) 2128/     C2A : 8E 33               		dw 910|3000h
+(2) 2129/     C2C : C4 33               		dw 964|3000h
+(2) 2130/     C2E : FD 33               		dw 1021|3000h
+(2) 2131/     C30 : 39 34               		dw 1081|3000h
+(2) 2132/     C32 : 7A 34               		dw 1146|3000h
+(2) 2133/     C34 : BE 34               		dw 1214|3000h
+(2) 2134/     C36 : 84 3A               		dw 644|3800h		; C-7
+(2) 2135/     C38 : A9 3A               		dw 681|3800h
+(2) 2136/     C3A : D2 3A               		dw 722|3800h
+(2) 2137/     C3C : FD 3A               		dw 765|3800h
+(2) 2138/     C3E : 2A 3B               		dw 810|3800h
+(2) 2139/     C40 : 5A 3B               		dw 858|3800h
+(2) 2140/     C42 : 8E 3B               		dw 910|3800h
+(2) 2141/     C44 : C4 3B               		dw 964|3800h
+(2) 2142/     C46 : FD 3B               		dw 1021|3800h
+(2) 2143/     C48 : 39 3C               		dw 1081|3800h
+(2) 2144/     C4A : 7A 3C               		dw 1146|3800h
+(2) 2145/     C4C : BE 3C               		dw 1214|3800h
+(2) 2146/     C4E :                     
+(2) 2147/     C4E :                     psgFreq_List:
+(2) 2148/     C4E : FF FF               		dw -1		; C-0 $0
+(2) 2149/     C50 : FF FF               		dw -1
+(2) 2150/     C52 : FF FF               		dw -1
+(2) 2151/     C54 : FF FF               		dw -1
+(2) 2152/     C56 : FF FF               		dw -1
+(2) 2153/     C58 : FF FF               		dw -1
+(2) 2154/     C5A : FF FF               		dw -1
+(2) 2155/     C5C : FF FF               		dw -1
+(2) 2156/     C5E : FF FF               		dw -1
+(2) 2157/     C60 : FF FF               		dw -1
+(2) 2158/     C62 : FF FF               		dw -1
+(2) 2159/     C64 : FF FF               		dw -1
+(2) 2160/     C66 : FF FF               		dw -1		; C-1 $C
+(2) 2161/     C68 : FF FF               		dw -1
+(2) 2162/     C6A : FF FF               		dw -1
+(2) 2163/     C6C : FF FF               		dw -1
+(2) 2164/     C6E : FF FF               		dw -1
+(2) 2165/     C70 : FF FF               		dw -1
+(2) 2166/     C72 : FF FF               		dw -1
+(2) 2167/     C74 : FF FF               		dw -1
+(2) 2168/     C76 : FF FF               		dw -1
+(2) 2169/     C78 : FF FF               		dw -1
+(2) 2170/     C7A : FF FF               		dw -1
+(2) 2171/     C7C : FF FF               		dw -1
+(2) 2172/     C7E : FF FF               		dw -1		; C-2 $18
+(2) 2173/     C80 : FF FF               		dw -1
+(2) 2174/     C82 : FF FF               		dw -1
+(2) 2175/     C84 : FF FF               		dw -1
+(2) 2176/     C86 : FF FF               		dw -1
+(2) 2177/     C88 : FF FF               		dw -1
+(2) 2178/     C8A : FF FF               		dw -1
+(2) 2179/     C8C : FF FF               		dw -1
+(2) 2180/     C8E : FF FF               		dw -1
+(2) 2181/     C90 : FF FF               		dw -1
+(2) 2182/     C92 : FF FF               		dw -1
+(2) 2183/     C94 : FF FF               		dw -1
+(2) 2184/     C96 : FF FF               		dw -1		; C-3 $24
+(2) 2185/     C98 : FF FF               		dw -1
+(2) 2186/     C9A : FF FF               		dw -1
+(2) 2187/     C9C : FF FF               		dw -1
+(2) 2188/     C9E : FF FF               		dw -1
+(2) 2189/     CA0 : FF FF               		dw -1
+(2) 2190/     CA2 : FF FF               		dw -1
+(2) 2191/     CA4 : FF FF               		dw -1
+(2) 2192/     CA6 : FF FF               		dw -1
+(2) 2193/     CA8 : F8 03               		dw 3F8h
+(2) 2194/     CAA : BF 03               		dw 3BFh
+(2) 2195/     CAC : 89 03               		dw 389h
+(2) 2196/     CAE : 56 03               		dw 356h		;C-4 30
+(2) 2197/     CB0 : 26 03               		dw 326h
+(2) 2198/     CB2 : F9 02               		dw 2F9h
+(2) 2199/     CB4 : CE 02               		dw 2CEh
+(2) 2200/     CB6 : A5 02               		dw 2A5h
+(2) 2201/     CB8 : 80 02               		dw 280h
+(2) 2202/     CBA : 5C 02               		dw 25Ch
+(2) 2203/     CBC : 3A 02               		dw 23Ah
+(2) 2204/     CBE : 1A 02               		dw 21Ah
+(2) 2205/     CC0 : FB 01               		dw 1FBh
+(2) 2206/     CC2 : DF 01               		dw 1DFh
+(2) 2207/     CC4 : C4 01               		dw 1C4h
+(2) 2208/     CC6 : AB 01               		dw 1ABh		;C-5 3C
+(2) 2209/     CC8 : 93 01               		dw 193h
+(2) 2210/     CCA : 7D 01               		dw 17Dh
+(2) 2211/     CCC : 67 01               		dw 167h
+(2) 2212/     CCE : 53 01               		dw 153h
+(2) 2213/     CD0 : 40 01               		dw 140h
+(2) 2214/     CD2 : 2E 01               		dw 12Eh
+(2) 2215/     CD4 : 1D 01               		dw 11Dh
+(2) 2216/     CD6 : 0D 01               		dw 10Dh
+(2) 2217/     CD8 : FE 00               		dw 0FEh
+(2) 2218/     CDA : EF 00               		dw 0EFh
+(2) 2219/     CDC : E2 00               		dw 0E2h
+(2) 2220/     CDE : D6 00               		dw 0D6h		;C-6 48
+(2) 2221/     CE0 : C9 00               		dw 0C9h
+(2) 2222/     CE2 : BE 00               		dw 0BEh
+(2) 2223/     CE4 : B4 00               		dw 0B4h
+(2) 2224/     CE6 : A9 00               		dw 0A9h
+(2) 2225/     CE8 : A0 00               		dw 0A0h
+(2) 2226/     CEA : 97 00               		dw 97h
+(2) 2227/     CEC : 8F 00               		dw 8Fh
+(2) 2228/     CEE : 87 00               		dw 87h
+(2) 2229/     CF0 : 7F 00               		dw 7Fh
+(2) 2230/     CF2 : 78 00               		dw 78h
+(2) 2231/     CF4 : 71 00               		dw 71h
+(2) 2232/     CF6 : 6B 00               		dw 6Bh		; C-7 54
+(2) 2233/     CF8 : 65 00               		dw 65h
+(2) 2234/     CFA : 5F 00               		dw 5Fh
+(2) 2235/     CFC : 5A 00               		dw 5Ah
+(2) 2236/     CFE : 55 00               		dw 55h
+(2) 2237/     D00 : 50 00               		dw 50h
+(2) 2238/     D02 : 4B 00               		dw 4Bh
+(2) 2239/     D04 : 47 00               		dw 47h
+(2) 2240/     D06 : 43 00               		dw 43h
+(2) 2241/     D08 : 40 00               		dw 40h
+(2) 2242/     D0A : 3C 00               		dw 3Ch
+(2) 2243/     D0C : 39 00               		dw 39h
+(2) 2244/     D0E : 36 00               		dw 36h		; C-8 $60
+(2) 2245/     D10 : 33 00               		dw 33h
+(2) 2246/     D12 : 30 00               		dw 30h
+(2) 2247/     D14 : 2D 00               		dw 2Dh
+(2) 2248/     D16 : 2B 00               		dw 2Bh
+(2) 2249/     D18 : 28 00               		dw 28h
+(2) 2250/     D1A : 26 00               		dw 26h
+(2) 2251/     D1C : 24 00               		dw 24h
+(2) 2252/     D1E : 22 00               		dw 22h
+(2) 2253/     D20 : 20 00               		dw 20h
+(2) 2254/     D22 : 1F 00               		dw 1Fh
+(2) 2255/     D24 : 1D 00               		dw 1Dh
+(2) 2256/     D26 : 1B 00               		dw 1Bh		; C-9 $6C
+(2) 2257/     D28 : 1A 00               		dw 1Ah
+(2) 2258/     D2A : 18 00               		dw 18h
+(2) 2259/     D2C : 17 00               		dw 17h
+(2) 2260/     D2E : 16 00               		dw 16h
+(2) 2261/     D30 : 15 00               		dw 15h
+(2) 2262/     D32 : 13 00               		dw 13h
+(2) 2263/     D34 : 12 00               		dw 12h
+(2) 2264/     D36 : 11 00               		dw 11h
+(2) 2265/     D38 : 10 00                		dw 10h
+(2) 2266/     D3A : 09 00                		dw 9h
+(2) 2267/     D3C : 08 00                		dw 8h
+(2) 2268/     D3E : 00 00               		dw 0		; use +60 if using C-5 for tone 3 noise
+(2) 2269/     D40 :                     		
+(2) 2270/     D40 : 00 01               wavFreq_List:	dw 100h		; C-0
+(2) 2271/     D42 : 00 01               		dw 100h
+(2) 2272/     D44 : 00 01               		dw 100h
+(2) 2273/     D46 : 00 01               		dw 100h
+(2) 2274/     D48 : 00 01               		dw 100h
+(2) 2275/     D4A : 00 01               		dw 100h
+(2) 2276/     D4C : 00 01               		dw 100h	
+(2) 2277/     D4E : 00 01               		dw 100h
+(2) 2278/     D50 : 00 01               		dw 100h
+(2) 2279/     D52 : 00 01               		dw 100h
+(2) 2280/     D54 : 00 01               		dw 100h
+(2) 2281/     D56 : 00 01               		dw 100h
+(2) 2282/     D58 : 00 01               		dw 100h		; C-1
+(2) 2283/     D5A : 00 01               		dw 100h
+(2) 2284/     D5C : 00 01               		dw 100h
+(2) 2285/     D5E : 00 01               		dw 100h
+(2) 2286/     D60 : 00 01               		dw 100h
+(2) 2287/     D62 : 00 01               		dw 100h
+(2) 2288/     D64 : 00 01               		dw 100h	
+(2) 2289/     D66 : 00 01               		dw 100h
+(2) 2290/     D68 : 00 01               		dw 100h
+(2) 2291/     D6A : 00 01               		dw 100h
+(2) 2292/     D6C : 00 01               		dw 100h
+(2) 2293/     D6E : 00 01               		dw 100h
+(2) 2294/     D70 : 00 01               		dw 100h		; C-2
+(2) 2295/     D72 : 00 01               		dw 100h
+(2) 2296/     D74 : 00 01               		dw 100h
+(2) 2297/     D76 : 00 01               		dw 100h
+(2) 2298/     D78 : 00 01               		dw 100h
+(2) 2299/     D7A : 00 01               		dw 100h
+(2) 2300/     D7C : 00 01               		dw 100h
+(2) 2301/     D7E : 00 01               		dw 100h
+(2) 2302/     D80 : 00 01               		dw 100h
+(2) 2303/     D82 : 00 01               		dw 100h
+(2) 2304/     D84 : 00 01               		dw 100h
+(2) 2305/     D86 : 3B 00               		dw 03Bh
+(2) 2306/     D88 : 3E 00               		dw 03Eh		; C-3 5512
+(2) 2307/     D8A : 43 00               		dw 043h		; C#3
+(2) 2308/     D8C : 46 00               		dw 046h		; D-3
+(2) 2309/     D8E : 49 00               		dw 049h		; D#3
+(2) 2310/     D90 : 4E 00               		dw 04Eh		; E-3
+(2) 2311/     D92 : 54 00               		dw 054h		; F-3
+(2) 2312/     D94 : 58 00               		dw 058h		; F#3
+(2) 2313/     D96 : 5E 00               		dw 05Eh		; G-3 8363 -17
+(2) 2314/     D98 : 63 00               		dw 063h		; G#3
+(2) 2315/     D9A : 68 00               		dw 068h		; A-3
+(2) 2316/     D9C : 70 00               		dw 070h		; A#3
+(2) 2317/     D9E : 75 00               		dw 075h		; B-3
+(2) 2318/     DA0 : 7F 00               		dw 07Fh		; C-4 11025 -12
+(2) 2319/     DA2 : 88 00               		dw 088h		; C#4
+(2) 2320/     DA4 : 8F 00               		dw 08Fh		; D-4
+(2) 2321/     DA6 : 97 00               		dw 097h		; D#4
+(2) 2322/     DA8 : A0 00               		dw 0A0h		; E-4
+(2) 2323/     DAA : AD 00               		dw 0ADh		; F-4
+(2) 2324/     DAC : B5 00               		dw 0B5h		; F#4
+(2) 2325/     DAE : C0 00               		dw 0C0h		; G-4
+(2) 2326/     DB0 : CC 00               		dw 0CCh		; G#4
+(2) 2327/     DB2 : D7 00               		dw 0D7h		; A-4
+(2) 2328/     DB4 : E7 00               		dw 0E7h		; A#4
+(2) 2329/     DB6 : F0 00               		dw 0F0h		; B-4
+(2) 2330/     DB8 : 00 01               		dw 100h		; C-5 22050
+(2) 2331/     DBA : 10 01               		dw 110h		; C#5
+(2) 2332/     DBC : 20 01               		dw 120h		; D-5
+(2) 2333/     DBE : 2C 01               		dw 12Ch		; D#5
+(2) 2334/     DC0 : 42 01               		dw 142h		; E-5
+(2) 2335/     DC2 : 58 01               		dw 158h		; F-5
+(2) 2336/     DC4 : 6A 01               		dw 16Ah		; F#5 32000 +6
+(2) 2337/     DC6 : 7E 01               		dw 17Eh		; G-5
+(2) 2338/     DC8 : 90 01               		dw 190h		; G#5
+(2) 2339/     DCA : AC 01               		dw 1ACh		; A-5
+(2) 2340/     DCC : C2 01               		dw 1C2h		; A#5
+(2) 2341/     DCE : E0 01               		dw 1E0h		; B-5
+(2) 2342/     DD0 : F8 01               		dw 1F8h		; C-6 44100 +12
+(2) 2343/     DD2 : 10 02               		dw 210h		; C#6
+(2) 2344/     DD4 : 40 02               		dw 240h		; D-6
+(2) 2345/     DD6 : 60 02               		dw 260h		; D#6
+(2) 2346/     DD8 : 80 02               		dw 280h		; E-6
+(2) 2347/     DDA : A0 02               		dw 2A0h		; F-6
+(2) 2348/     DDC : D0 02               		dw 2D0h		; F#6
+(2) 2349/     DDE : F8 02               		dw 2F8h		; G-6
+(2) 2350/     DE0 : 20 03               		dw 320h		; G#6
+(2) 2351/     DE2 : 50 03               		dw 350h		; A-6
+(2) 2352/     DE4 : 80 03               		dw 380h		; A#6
+(2) 2353/     DE6 : C0 03               		dw 3C0h		; B-6
+(2) 2354/     DE8 : 00 04               		dw 400h		; C-7 88200
+(2) 2355/     DEA : 00 01               		dw 100h
+(2) 2356/     DEC : 00 01               		dw 100h
+(2) 2357/     DEE : 00 01               		dw 100h
+(2) 2358/     DF0 : 00 01               		dw 100h
+(2) 2359/     DF2 : 00 01               		dw 100h
+(2) 2360/     DF4 : 00 01               		dw 100h	
+(2) 2361/     DF6 : 00 01               		dw 100h
+(2) 2362/     DF8 : 00 01               		dw 100h
+(2) 2363/     DFA : 00 01               		dw 100h
+(2) 2364/     DFC : 00 01               		dw 100h
+(2) 2365/     DFE : 00 01               		dw 100h	
+(2) 2366/     E00 : 00 01               		dw 100h		; C-8
+(2) 2367/     E02 : 00 01               		dw 100h
+(2) 2368/     E04 : 00 01               		dw 100h
+(2) 2369/     E06 : 00 01               		dw 100h
+(2) 2370/     E08 : 00 01               		dw 100h
+(2) 2371/     E0A : 00 01               		dw 100h
+(2) 2372/     E0C : 00 01               		dw 100h	
+(2) 2373/     E0E : 00 01               		dw 100h
+(2) 2374/     E10 : 00 01               		dw 100h
+(2) 2375/     E12 : 00 01               		dw 100h
+(2) 2376/     E14 : 00 01               		dw 100h
+(2) 2377/     E16 : 00 01               		dw 100h	
+(2) 2378/     E18 : 00 01               		dw 100h		; C-9
+(2) 2379/     E1A : 00 01               		dw 100h
+(2) 2380/     E1C : 00 01               		dw 100h
+(2) 2381/     E1E : 00 01               		dw 100h
+(2) 2382/     E20 : 00 01               		dw 100h
+(2) 2383/     E22 : 00 01               		dw 100h
+(2) 2384/     E24 : 00 01               		dw 100h	
+(2) 2385/     E26 : 00 01               		dw 100h
+(2) 2386/     E28 : 00 01               		dw 100h
+(2) 2387/     E2A : 00 01               		dw 100h
+(2) 2388/     E2C : 00 01               		dw 100h
+(2) 2389/     E2E : 00 01               		dw 100h
+(2) 2390/     E30 :                     		
+(2) 2391/     E30 :                     ; ====================================================================
+(2) 2392/     E30 :                     ; ----------------------------------------------------------------
+(2) 2393/     E30 :                     ; Z80 RAM
+(2) 2394/     E30 :                     ; ----------------------------------------------------------------
+(2) 2395/     E30 :                     
+(2) 2396/     E30 :                     ; ----------------------------------------------------
+(2) 2397/     E30 :                     ; Tracker data buffer
+(2) 2398/     E30 :                     ; ----------------------------------------------------
+(2) 2399/     E30 :                     
+(2) 2400/     E30 : =0H                 trck_ReqBlk	equ 00h		; word
+(2) 2401/     E30 : =2H                 trck_ReqPatt	equ 02h		; word
+(2) 2402/     E30 : =4H                 trck_ReqIns	equ 04h		; word
+(2) 2403/     E30 : =6H                 trck_ReqTicks	equ 06h
+(2) 2404/     E30 : =7H                 trck_ReqTempo	equ 07h
+(2) 2405/     E30 : =8H                 trck_ReqCurrBlk	equ 08h
+(2) 2406/     E30 : =9H                 trck_ReqSndBnk	equ 09h
+(2) 2407/     E30 : =AH                 trck_ReqFlag	equ 0Ah
+(2) 2408/     E30 : =BH                 trck_ReqChnls	equ 0Bh
+(2) 2409/     E30 : =CH                 trck_PsgNoise	equ 0Ch
+(2) 2410/     E30 : =DH                 trck_TicksRead	equ 0Dh
+(2) 2411/     E30 : =EH                 trck_BlockCurr	equ 0Eh
+(2) 2412/     E30 : =FH                 trck_MasterVol	equ 0Fh
+(2) 2413/     E30 : =10H                trck_Priority	equ 10h
+(2) 2414/     E30 : =11H                trck_Active	equ 11h
+(2) 2415/     E30 : =12H                trck_Blocks	equ 12h		; word
+(2) 2416/     E30 : =14H                trck_PattBase	equ 14h		; word
+(2) 2417/     E30 : =16H                trck_Instr	equ 16h		; word
+(2) 2418/     E30 : =18H                trck_PattRead	equ 18h		; word
+(2) 2419/     E30 : =1AH                trck_RowSteps	equ 1Ah		; word
+(2) 2420/     E30 : =1CH                trck_TicksMain 	equ 1Ch
+(2) 2421/     E30 : =1DH                trck_TempoBits	equ 1Dh
+(2) 2422/     E30 : =1EH                trck_RowWait	equ 1Eh
+(2) 2423/     E30 : =1FH                trck_TicksCurr	equ 1Fh
+(2) 2424/     E30 :                     
+(2) 2425/     E30 :                     ; ----------------------------------------------------
+(2) 2426/     E30 :                     ; Track buffer
+(2) 2427/     E30 :                     ; ----------------------------------------------------
+(2) 2428/     E30 :                     
+(2) 2429/     E30 :                     SndBuff_Track_1:
+(2) 2430/     E30 :                     		ds 10h		; Request list
+(2) 2431/     E40 : 00                  		db 0		; Priority
+(2) 2432/     E41 :                     		ds 0Fh		; Main track
+(2) 2433/     E50 :                     SndBuff_Track_2:
+(2) 2434/     E50 :                     		ds 10h
+(2) 2435/     E60 : 01                  		db 1
+(2) 2436/     E61 :                     		ds 0Fh
+(2) 2437/     E70 :                     
+(2) 2438/     E70 :                     ; ----------------------------------------------------
+(2) 2439/     E70 :                     ; Tracker note buffers
+(2) 2440/     E70 :                     ; ----------------------------------------------------
+(2) 2441/     E70 :                     
+(2) 2442/     E70 : =0H                 chnl_Chip	equ 0
+(2) 2443/     E70 : =1H                 chnl_Type	equ 1
+(2) 2444/     E70 : =2H                 chnl_Note	equ 2
+(2) 2445/     E70 : =3H                 chnl_Ins	equ 3
+(2) 2446/     E70 : =4H                 chnl_Vol	equ 4
+(2) 2447/     E70 : =5H                 chnl_EffId	equ 5
+(2) 2448/     E70 : =6H                 chnl_EffArg	equ 6
+(2) 2449/     E70 : =7H                 chnl_InsAddr	equ 7		; word
+(2) 2450/     E70 : =9H                 chnl_Freq	equ 09h		; word
+(2) 2451/     E70 : =BH                 chnl_InsType	equ 0Bh
+(2) 2452/     E70 : =CH                 chnl_InsOpt	equ 0Ch
+(2) 2453/     E70 : =DH                 chnl_FmPan	equ 0Dh
+(2) 2454/     E70 : =EH                 chnl_FmRegB0	equ 0Eh
+(2) 2455/     E70 : =FH                 chnl_FmRegB4	equ 0Fh
+(2) 2456/     E70 : =10H                chnl_FmRegKeys	equ 10h
+(2) 2457/     E70 : =11H                chnl_FmVolBase	equ 11h
+(2) 2458/     E70 : =12H                chnl_PsgVolBase	equ 12h
+(2) 2459/     E70 : =13H                chnl_PsgVolEnv	equ 13h
+(2) 2460/     E70 : =14H                chnl_PsgIndx	equ 14h
+(2) 2461/     E70 : =15H                chnl_SmplFlags	equ 15h
+(2) 2462/     E70 : =16H                chnl_EfVolSlide	equ 16h
+(2) 2463/     E70 : =17H                chnl_EfNewVol	equ 17h
+(2) 2464/     E70 : =18H                chnl_EfPortam	equ 18h		; word
+(2) 2465/     E70 : =1AH                chnl_EfNewFreq	equ 1Ah		; word
+(2) 2466/     E70 : =1CH                chnl_PsgOutFreq	equ 1Ch		; word
+(2) 2467/     E70 :                     
+(2) 2468/     E70 :                     SndBuff_ChnlBuff_1:
+(2) 2469/     E70 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2470/     E78 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2471/     E80 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2472/     E88 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2473/     E90 :                     		
+(2) 2474/     E90 : 01 00 00 00 00 00   		db 01h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2475/     E98 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2476/     EA0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2477/     EA8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2478/     EB0 :                     
+(2) 2479/     EB0 : 04 00 00 00 00 00   		db 04h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2480/     EB8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2481/     EC0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2482/     EC8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2483/     ED0 :                     
+(2) 2484/     ED0 : 05 00 00 00 00 00   		db 05h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2485/     ED8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2486/     EE0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2487/     EE8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2488/     EF0 :                     		
+(2) 2489/     EF0 : 02 00 00 00 00 00   		db 02h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2490/     EF8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2491/     F00 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2492/     F08 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2493/     F10 :                     
+(2) 2494/     F10 : 06 00 00 00 00 00   		db 06h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2495/     F18 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2496/     F20 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2497/     F28 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2498/     F30 :                     
+(2) 2499/     F30 :                     ; SndBuff_ChnlPsg_1:
+(2) 2500/     F30 : 80 00 00 00 00 00   		db 80h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2501/     F38 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2502/     F40 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2503/     F48 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2504/     F50 :                     
+(2) 2505/     F50 : A0 00 00 00 00 00   		db 0A0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2506/     F58 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2507/     F60 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2508/     F68 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2509/     F70 :                     
+(2) 2510/     F70 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2511/     F78 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2512/     F80 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2513/     F88 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2514/     F90 :                     
+(2) 2515/     F90 : E0 00 00 00 00 00   		db 0E0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2516/     F98 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2517/     FA0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2518/     FA8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2519/     FB0 :                     
+(2) 2520/     FB0 :                     		
+(2) 2521/     FB0 :                     SndBuff_ChnlBuff_2:
+(2) 2522/     FB0 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2523/     FB8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2524/     FC0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2525/     FC8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2526/     FD0 :                     		
+(2) 2527/     FD0 : 01 00 00 00 00 00   		db 01h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2528/     FD8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2529/     FE0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2530/     FE8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2531/     FF0 :                     
+(2) 2532/     FF0 : 04 00 00 00 00 00   		db 04h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2533/     FF8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2534/    1000 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2535/    1008 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2536/    1010 :                     
+(2) 2537/    1010 : 05 00 00 00 00 00   		db 05h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2538/    1018 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2539/    1020 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2540/    1028 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2541/    1030 :                     		
+(2) 2542/    1030 : 02 00 00 00 00 00   		db 02h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2543/    1038 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2544/    1040 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2545/    1048 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2546/    1050 :                     
+(2) 2547/    1050 : 06 00 00 00 00 00   		db 06h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2548/    1058 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2549/    1060 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2550/    1068 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2551/    1070 :                     
+(2) 2552/    1070 :                     ; SndBuff_ChnlPsg_2:
+(2) 2553/    1070 : 80 00 00 00 00 00   		db 80h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2554/    1078 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2555/    1080 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2556/    1088 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2557/    1090 :                     
+(2) 2558/    1090 : A0 00 00 00 00 00   		db 0A0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2559/    1098 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2560/    10A0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2561/    10A8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2562/    10B0 :                     
+(2) 2563/    10B0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2564/    10B8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2565/    10C0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2566/    10C8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2567/    10D0 :                     
+(2) 2568/    10D0 : E0 00 00 00 00 00   		db 0E0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2569/    10D8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2570/    10E0 : C0 00 00 00 00 00   		db 0C0h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2571/    10E8 : 00 00 00 00 00 00   		db 00h,00h,00h,00h,00h,00h,00h,00h
+                    00 00 
+(2) 2572/    10F0 :                     
+(2) 2573/    10F0 :                     SndBuff_UsedChnls:
+(2) 2574/    10F0 :                     		ds 10*MAX_TRACKS
+(2) 2575/    1104 :                     SndBuff_UsedChnls_2:
+(2) 2576/    1104 :                     		ds 10*MAX_TRACKS
+(2) 2577/    1118 :                     
+(2) 2578/    1118 :                     ; ====================================================================
+(2) 2579/    1118 :                     ; ----------------------------------------------------------------
+(2) 2580/    1118 :                     ; MUSIC DATA
+(2) 2581/    1118 :                     ; ----------------------------------------------------------------
+(2) 2582/    1118 :                     
+(2) 2583/    1118 :                     ; ----------------------------------------------------
+(2) 2584/    1118 :                     ; PSG Instruments
+(2) 2585/    1118 :                     ; ----------------------------------------------------
+(2) 2586/    1118 :                     
+(2) 2587/    1118 : 00                  PsgIns_00:	db 0
+(2) 2588/    1119 : FF                  		db -1
+(2) 2589/    111A : 00 02 04 05 06      PsgIns_01:	db 0,2,4,5,6
+(2) 2590/    111F : FF                  		db -1
+(2) 2591/    1120 : 00 0F               PsgIns_02:	db 0,15
+(2) 2592/    1122 : FF                  		db -1
+(2) 2593/    1123 : 00 00 01 01 02 02   PsgIns_03:	db 0,0,1,1,2,2,3,4,6,10,15
                     03 04 06 0A 0F 
-(2) 2613/    112E : FF                  		db -1
-(2) 2614/    112F : 00 02 04 06 0A      PsgIns_04:	db 0,2,4,6,10
-(2) 2615/    1134 : FF                  		db -1	
-(2) 2616/    1135 :                     		align 4
-(2) 2617/    1138 :                     		
-(2) 2618/    1138 :                     ; ----------------------------------------------------
-(2) 2619/    1138 :                     ; FM Instruments
-(2) 2620/    1138 :                     ; ----------------------------------------------------
-(2) 2621/    1138 :                     
-(2) 2622/    1138 :                     ; .gsx instruments; filename,$2478,$20 ($28 for FM3 instruments)
-(2) 2623/    1138 :                     FmIns_Fm3_OpenHat:
-(2) 2624/    1138 :                     		binclude "game/sound/instr/fm/fm3_openhat.gsx",2478h,28h
-(2) 2625/    1160 :                     FmIns_Fm3_ClosedHat:
-(2) 2626/    1160 :                     		binclude "game/sound/instr/fm/fm3_closedhat.gsx",2478h,28h
-(2) 2627/    1188 :                     FmIns_DrumKick:
-(2) 2628/    1188 :                     		binclude "game/sound/instr/fm/drum_kick.gsx",2478h,20h
-(2) 2629/    11A8 :                     FmIns_DrumSnare:
-(2) 2630/    11A8 :                     		binclude "game/sound/instr/fm/drum_snare.gsx",2478h,20h
-(2) 2631/    11C8 :                     FmIns_DrumCloseHat:
-(2) 2632/    11C8 :                     		binclude "game/sound/instr/fm/drum_closehat.gsx",2478h,20h
-(2) 2633/    11E8 :                     FmIns_Piano_m1:
-(2) 2634/    11E8 :                     		binclude "game/sound/instr/fm/piano_m1.gsx",2478h,20h
-(2) 2635/    1208 :                     FmIns_Bass_gum:
-(2) 2636/    1208 :                     		binclude "game/sound/instr/fm/bass_gum.gsx",2478h,20h
-(2) 2637/    1228 :                     FmIns_Bass_calm:
-(2) 2638/    1228 :                     		binclude "game/sound/instr/fm/bass_calm.gsx",2478h,20h
-(2) 2639/    1248 :                     FmIns_Bass_heavy:
-(2) 2640/    1248 :                     		binclude "game/sound/instr/fm/bass_heavy.gsx",2478h,20h
-(2) 2641/    1268 :                     FmIns_Bass_ambient:
-(2) 2642/    1268 :                     		binclude "game/sound/instr/fm/bass_ambient.gsx",2478h,20h
-(2) 2643/    1288 :                     FmIns_Brass_gummy:
-(2) 2644/    1288 :                     		binclude "game/sound/instr/fm/brass_gummy.gsx",2478h,20h
-(2) 2645/    12A8 :                     FmIns_Flaute_1:
-(2) 2646/    12A8 :                     		binclude "game/sound/instr/fm/flaute_1.gsx",2478h,20h
-(2) 2647/    12C8 :                     FmIns_Bass_2:
-(2) 2648/    12C8 :                     		binclude "game/sound/instr/fm/bass_2.gsx",2478h,20h
-(2) 2649/    12E8 :                     FmIns_Bass_3:
-(2) 2650/    12E8 :                     		binclude "game/sound/instr/fm/bass_3.gsx",2478h,20h
-(2) 2651/    1308 :                     FmIns_Bass_5:
-(2) 2652/    1308 :                     		binclude "game/sound/instr/fm/bass_5.gsx",2478h,20h
-(2) 2653/    1328 :                     FmIns_Bass_synth:
-(2) 2654/    1328 :                     		binclude "game/sound/instr/fm/bass_synth_1.gsx",2478h,20h
-(2) 2655/    1348 :                     FmIns_Guitar_1:
-(2) 2656/    1348 :                     		binclude "game/sound/instr/fm/guitar_1.gsx",2478h,20h
-(2) 2657/    1368 :                     FmIns_Horn_1:
-(2) 2658/    1368 :                     		binclude "game/sound/instr/fm/horn_1.gsx",2478h,20h
-(2) 2659/    1388 :                     FmIns_Organ_M1:
-(2) 2660/    1388 :                     		binclude "game/sound/instr/fm/organ_m1.gsx",2478h,20h
-(2) 2661/    13A8 :                     FmIns_Bass_Beach:
-(2) 2662/    13A8 :                     		binclude "game/sound/instr/fm/bass_beach.gsx",2478h,20h
-(2) 2663/    13C8 :                     FmIns_Bass_Beach_2:
-(2) 2664/    13C8 :                     		binclude "game/sound/instr/fm/bass_beach_2.gsx",2478h,20h
-(2) 2665/    13E8 :                     FmIns_Brass_Cave:
-(2) 2666/    13E8 :                     		binclude "game/sound/instr/fm/brass_cave.gsx",2478h,20h
-(2) 2667/    1408 :                     FmIns_Piano_Small:
-(2) 2668/    1408 :                     		binclude "game/sound/instr/fm/piano_small.gsx",2478h,20h
-(2) 2669/    1428 :                     FmIns_Trumpet_2:
-(2) 2670/    1428 :                     		binclude "game/sound/instr/fm/trumpet_2.gsx",2478h,20h
-(2) 2671/    1448 :                     FmIns_Bell_Glass:
-(2) 2672/    1448 :                     		binclude "game/sound/instr/fm/bell_glass.gsx",2478h,20h
-(2) 2673/    1468 :                     FmIns_Marimba_1:
-(2) 2674/    1468 :                     		binclude "game/sound/instr/fm/marimba_1.gsx",2478h,20h
-(2) 2675/    1488 :                     FmIns_Ambient_dark:
-(2) 2676/    1488 :                     		binclude "game/sound/instr/fm/ambient_dark.gsx",2478h,20h
-(2) 2677/    14A8 :                     FmIns_Ambient_spook:
-(2) 2678/    14A8 :                     		binclude "game/sound/instr/fm/ambient_spook.gsx",2478h,20h
-(2) 2679/    14C8 :                     FmIns_Ding_toy:
-(2) 2680/    14C8 :                     		binclude "game/sound/instr/fm/ding_toy.gsx",2478h,20h
-(2) 2681/    14E8 :                     
+(2) 2594/    112E : FF                  		db -1
+(2) 2595/    112F : 00 02 04 06 0A      PsgIns_04:	db 0,2,4,6,10
+(2) 2596/    1134 : FF                  		db -1	
+(2) 2597/    1135 :                     		align 4
+(2) 2598/    1138 :                     		
+(2) 2599/    1138 :                     ; ----------------------------------------------------
+(2) 2600/    1138 :                     ; FM Instruments
+(2) 2601/    1138 :                     ; ----------------------------------------------------
+(2) 2602/    1138 :                     
+(2) 2603/    1138 :                     ; .gsx instruments; filename,$2478,$20 ($28 for FM3 instruments)
+(2) 2604/    1138 :                     FmIns_Fm3_OpenHat:
+(2) 2605/    1138 :                     		binclude "game/sound/instr/fm/fm3_openhat.gsx",2478h,28h
+(2) 2606/    1160 :                     FmIns_Fm3_ClosedHat:
+(2) 2607/    1160 :                     		binclude "game/sound/instr/fm/fm3_closedhat.gsx",2478h,28h
+(2) 2608/    1188 :                     FmIns_DrumKick:
+(2) 2609/    1188 :                     		binclude "game/sound/instr/fm/drum_kick.gsx",2478h,20h
+(2) 2610/    11A8 :                     FmIns_DrumSnare:
+(2) 2611/    11A8 :                     		binclude "game/sound/instr/fm/drum_snare.gsx",2478h,20h
+(2) 2612/    11C8 :                     FmIns_DrumCloseHat:
+(2) 2613/    11C8 :                     		binclude "game/sound/instr/fm/drum_closehat.gsx",2478h,20h
+(2) 2614/    11E8 :                     FmIns_Piano_m1:
+(2) 2615/    11E8 :                     		binclude "game/sound/instr/fm/piano_m1.gsx",2478h,20h
+(2) 2616/    1208 :                     FmIns_Bass_gum:
+(2) 2617/    1208 :                     		binclude "game/sound/instr/fm/bass_gum.gsx",2478h,20h
+(2) 2618/    1228 :                     FmIns_Bass_calm:
+(2) 2619/    1228 :                     		binclude "game/sound/instr/fm/bass_calm.gsx",2478h,20h
+(2) 2620/    1248 :                     FmIns_Bass_heavy:
+(2) 2621/    1248 :                     		binclude "game/sound/instr/fm/bass_heavy.gsx",2478h,20h
+(2) 2622/    1268 :                     FmIns_Bass_ambient:
+(2) 2623/    1268 :                     		binclude "game/sound/instr/fm/bass_ambient.gsx",2478h,20h
+(2) 2624/    1288 :                     FmIns_Brass_gummy:
+(2) 2625/    1288 :                     		binclude "game/sound/instr/fm/brass_gummy.gsx",2478h,20h
+(2) 2626/    12A8 :                     FmIns_Flaute_1:
+(2) 2627/    12A8 :                     		binclude "game/sound/instr/fm/flaute_1.gsx",2478h,20h
+(2) 2628/    12C8 :                     FmIns_Bass_2:
+(2) 2629/    12C8 :                     		binclude "game/sound/instr/fm/bass_2.gsx",2478h,20h
+(2) 2630/    12E8 :                     FmIns_Bass_3:
+(2) 2631/    12E8 :                     		binclude "game/sound/instr/fm/bass_3.gsx",2478h,20h
+(2) 2632/    1308 :                     FmIns_Bass_5:
+(2) 2633/    1308 :                     		binclude "game/sound/instr/fm/bass_5.gsx",2478h,20h
+(2) 2634/    1328 :                     FmIns_Bass_synth:
+(2) 2635/    1328 :                     		binclude "game/sound/instr/fm/bass_synth_1.gsx",2478h,20h
+(2) 2636/    1348 :                     FmIns_Guitar_1:
+(2) 2637/    1348 :                     		binclude "game/sound/instr/fm/guitar_1.gsx",2478h,20h
+(2) 2638/    1368 :                     FmIns_Horn_1:
+(2) 2639/    1368 :                     		binclude "game/sound/instr/fm/horn_1.gsx",2478h,20h
+(2) 2640/    1388 :                     FmIns_Organ_M1:
+(2) 2641/    1388 :                     		binclude "game/sound/instr/fm/organ_m1.gsx",2478h,20h
+(2) 2642/    13A8 :                     FmIns_Bass_Beach:
+(2) 2643/    13A8 :                     		binclude "game/sound/instr/fm/bass_beach.gsx",2478h,20h
+(2) 2644/    13C8 :                     FmIns_Bass_Beach_2:
+(2) 2645/    13C8 :                     		binclude "game/sound/instr/fm/bass_beach_2.gsx",2478h,20h
+(2) 2646/    13E8 :                     FmIns_Brass_Cave:
+(2) 2647/    13E8 :                     		binclude "game/sound/instr/fm/brass_cave.gsx",2478h,20h
+(2) 2648/    1408 :                     FmIns_Piano_Small:
+(2) 2649/    1408 :                     		binclude "game/sound/instr/fm/piano_small.gsx",2478h,20h
+(2) 2650/    1428 :                     FmIns_Trumpet_2:
+(2) 2651/    1428 :                     		binclude "game/sound/instr/fm/trumpet_2.gsx",2478h,20h
+(2) 2652/    1448 :                     FmIns_Bell_Glass:
+(2) 2653/    1448 :                     		binclude "game/sound/instr/fm/bell_glass.gsx",2478h,20h
+(2) 2654/    1468 :                     FmIns_Marimba_1:
+(2) 2655/    1468 :                     		binclude "game/sound/instr/fm/marimba_1.gsx",2478h,20h
+(2) 2656/    1488 :                     FmIns_Ambient_dark:
+(2) 2657/    1488 :                     		binclude "game/sound/instr/fm/ambient_dark.gsx",2478h,20h
+(2) 2658/    14A8 :                     FmIns_Ambient_spook:
+(2) 2659/    14A8 :                     		binclude "game/sound/instr/fm/ambient_spook.gsx",2478h,20h
+(2) 2660/    14C8 :                     FmIns_Ding_toy:
+(2) 2661/    14C8 :                     		binclude "game/sound/instr/fm/ding_toy.gsx",2478h,20h
+(2) 2662/    14E8 :                     
 (1)  138/    14E8 :                     		
 (1)  139/    14E8 :                     ; ====================================================================
 (1)  140/    14E8 :                     
@@ -9674,7 +9655,7 @@ MD RAM ends at: FFA08A
                     0000 0000 0000 0000 
                     0000                
       95/   40000 :                     
- AS V1.42 Beta [Bld 118] - source file main.asm - page 2 - 8/12/2019 17:35:03
+ AS V1.42 Beta [Bld 118] - source file main.asm - page 2 - 8/12/2019 22:14:00
 
 
   symbol table (* = unused):
@@ -9902,7 +9883,7 @@ MD RAM ends at: FFA08A
  SYS_DATA_1 :                A10003 - | *SYS_DATA_2 :                A10005 - |
 *SYS_DATA_3 :                A10007 - | *SYS_EXRAM :                 200000 - |
  SYS_IO :                    A10001 - |  SYS_TMSS :                  A14000 - |
-*TIME :                    17:35:02 - |  TRCK_ACTIVE :                   11 - |
+*TIME :                    22:14:00 - |  TRCK_ACTIVE :                   11 - |
  TRCK_BLOCKCURR :                 E - |  TRCK_BLOCKS :                   12 - |
  TRCK_INSTR :                    16 - | *TRCK_MASTERVOL :                 F - |
  TRCK_PATTBASE :                 14 - |  TRCK_PATTREAD :                 18 - |
@@ -9976,7 +9957,7 @@ MD RAM ends at: FFA08A
     568 symbols
     132 unused symbols
 
- AS V1.42 Beta [Bld 118] - source file main.asm - page 3 - 8/12/2019 17:35:03
+ AS V1.42 Beta [Bld 118] - source file main.asm - page 3 - 8/12/2019 22:14:00
 
 
   defined macros:
@@ -9989,7 +9970,7 @@ ROMPAD                                | STRUCT
 
       8 macros
 
- AS V1.42 Beta [Bld 118] - source file main.asm - page 4 - 8/12/2019 17:35:03
+ AS V1.42 Beta [Bld 118] - source file main.asm - page 4 - 8/12/2019 22:14:00
 
 
   defined functions:
@@ -9998,7 +9979,7 @@ ROMPAD                                | STRUCT
 NOTZ80                                | LOCATE                               
 MAPSIZE                               | DOUBLEWORD                           
 
- AS V1.42 Beta [Bld 118] - source file main.asm - page 5 - 8/12/2019 17:35:03
+ AS V1.42 Beta [Bld 118] - source file main.asm - page 5 - 8/12/2019 22:14:00
 
 
   codepages:
@@ -10007,10 +9988,10 @@ MAPSIZE                               | DOUBLEWORD
 STANDARD (0 changed characters)
 
 
-0.36 seconds assembly time
+0.39 seconds assembly time
 
-   5003 lines source file
-   5467 lines incl. macro expansions
+   4984 lines source file
+   5448 lines incl. macro expansions
       5 passes
       0 errors
       0 warnings

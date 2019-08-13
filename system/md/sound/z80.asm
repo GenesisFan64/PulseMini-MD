@@ -3,7 +3,7 @@
 ; Z80 Code
 ; ----------------------------------------------------------------
 
-MAX_CHNLS	equ	10			; Only first 10 are used
+MAX_CHNLS	equ	10			; Only the first 10 are used
 MAX_TRACKS	equ	2
 
 ; --------------------------------------------------------
@@ -424,7 +424,7 @@ SndDrv_ReadTrack:
 		inc	hl
 		ld	c,a
 		and	00111111b
-		ld	de,0		; size 20h
+		ld	de,0			; size 20h
 		ld	e,a
 		and	00011000b
 		rrca
@@ -969,7 +969,7 @@ SndDrv_ReadTrack:
 ; -------------------------------------
 ; Set effects
 ; 
-; sets to buffer only
+; updates to buffer only
 ; -------------------------------------
 
 .set_effect:
@@ -1034,7 +1034,7 @@ SndDrv_ReadTrack:
 
 .eff_B:
 		ld	(iy+trck_BlockCurr),c
-		ld	de,1
+		ld	de,1			; Finish row
 		ld	(iy+trck_RowSteps),e
 		ld	(iy+(trck_RowSteps+1)),d
 		ld	(iy+trck_RowWait),a
@@ -1185,6 +1185,11 @@ SndDrv_ReadTrack:
 		db 040h		; 0C0h
 
 ; ---------------------------------------------
+; Grab instrument from slot
+; 
+; Output
+; hl - current instrument
+; ---------------------------------------------
 
 .grab_instslot:
 		ld	l,(iy+trck_Instr)
@@ -1204,8 +1209,9 @@ SndDrv_ReadTrack:
 		ret
 
 ; ---------------------------------------------
-; These routines send the result data to
-; their sound chips
+; These routines send the result data from
+; the channel buffer to their respective
+; sound chips
 ; ---------------------------------------------
 
 .run_frequency:
@@ -1218,9 +1224,9 @@ SndDrv_ReadTrack:
 		jp	nz,.freqrn_psg
 .freqrn_not3:
 		ld	a,b
-		cp	2			; Type 2?
+		cp	2				; Type 2?
 		jp	nz,.freqrn_fm
-		ld	a,c			; Channel 6?
+		ld	a,c				; Channel 6?
 		cp	6
 		jp	z,.freqrn_smpl
 .freqrn_fm:
@@ -1228,18 +1234,18 @@ SndDrv_ReadTrack:
 		bit	7,e
 		ret	nz
 		ld	d,28h
-		call	SndDrv_FmSet_1		; KEYS OFF
+		call	SndDrv_FmSet_1			; KEYS OFF
 		ld	a,(ix+chnl_Note)
 		cp	-2
 		ret	z
 		cp	-1
 		ret	z
-		ld	h,(ix+(chnl_Freq+1))	; Copy freq
+		ld	h,(ix+(chnl_Freq+1))		; Copy freq
 		ld	l,(ix+chnl_Freq)
 		ld	(ix+(chnl_EfNewFreq+1)),h
 		ld	(ix+chnl_EfNewFreq),l
 		call	.set_fm_freq
-		ld	e,(ix+chnl_FmRegKeys)	; KEYS ON
+		ld	e,(ix+chnl_FmRegKeys)		; KEYS ON
 		ld	a,(ix+chnl_Chip)
 		or	e
 		ld	e,a
@@ -1459,7 +1465,7 @@ SndDrv_ReadTrack:
 		ld	d,0AAh
 		ld	e,(hl)
 		call	SndDrv_FmAutoSet
-		ld	e,(ix+chnl_FmRegKeys)	; KEYS ON TODO checar esto
+		ld	e,(ix+chnl_FmRegKeys)	; KEYS ON
 		ld	a,c
 		and	111b
 		or	e
@@ -1522,31 +1528,6 @@ SndDrv_ReadTrack:
 		dec 	d
 		ld	e,l
 		jp	SndDrv_FmAutoSet
-
-; TODO: checar porque puse esto
-; aqui en primer lugar
-; .play_sampl:
-; 		ld	a,(ix+chnl_Note)
-; 		ld	e,040h
-; 		cp	-1
-; 		jp	z,.set_smpflag
-; 		cp	-2
-; 		jp	z,.set_smpflag
-; 		cp	-10
-; 		jp	z,.set_smpflag
-; 		ld	h,(ix+(chnl_InsAddr+1))
-; 		ld	l,(ix+chnl_InsAddr)
-; 		ld	a,h
-; 		or	l
-; 		ret	z
-; 		ld	a,(ix+chnl_SmplFlags)
-; 		rlca
-; 		or	1
-; 		ld	e,a
-; .set_smpflag:
-; 		ld	a,e
-; 		ld	(Sample_Flags),a
-; 		ret
 
 ; ------------------------------------
 ; Set FM Volume
