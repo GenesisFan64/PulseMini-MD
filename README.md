@@ -6,9 +6,8 @@ NOTE: this source code is actually a sound tester, the Z80 code is located at /s
 # Features
 - All 10 channels: FM and PSG
 - Minimal FM3 Special mode support
-- A single pitch/note-controlled PCM Sample with frequency up to -crunchy- 22100Hz, but if you use DMA it will slowdown even more
-- Sample are autobanked, they can be anywhere in the ROM (but the music data is limited to single ROM banks)
-
+- A single pitch/note-controlled PCM Sample with frequency up to -crunchy- 22100Hz (but quality will still get affected if you use DMA)
+- Sample files are autobanked, they can be anywhere in the ROM (but the music data is still limited to single ROM banks)
 
 The assembler used here is a custom version of AS Micro Assembler (both executables for Linux and Windows), the original was made by Alfred Arnold, coding is done on Linux so I haven't checked if it compiles on Windows...
 
