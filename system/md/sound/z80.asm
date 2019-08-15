@@ -2571,9 +2571,9 @@ SndBuff_ChnlBuff_2:
 		db 00h,00h,00h,00h,00h,00h,00h,00h
 
 SndBuff_UsedChnls:
-		ds 10*MAX_TRACKS
+		ds MAX_CHNLS
 SndBuff_UsedChnls_2:
-		ds 10*MAX_TRACKS
+		ds MAX_CHNLS
 
 ; ====================================================================
 ; ----------------------------------------------------------------
