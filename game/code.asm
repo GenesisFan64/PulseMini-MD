@@ -19,8 +19,10 @@ VAR_MAXTRACK	equ	1
 ; ----------------------------------------------------------------
 
 		struct RAM_Local
-RAM_PlyrCurrIds	ds.w 4
+RAM_PlyrCurrIds	ds.w 2
+RAM_PlyrCurrVol	ds.w 2
 RAM_CurrTrack	ds.w 1
+RAM_CurrSelect	ds.w 1
 		finish
 
 ; ====================================================================
@@ -43,7 +45,7 @@ RAM_CurrTrack	ds.w 1
 		lea	str_Title(pc),a0
 		move.l	#locate(0,5,4),d0
 		bsr	Video_Print
-
+		
 		bsr	SndTest_Update
 		
 ; ====================================================================
@@ -60,6 +62,8 @@ FmEd_Loop:
 		btst	#bitVBlnk,d4
 		bne.s	.wait
 		
+		
+	; C / START
 		lea	(RAM_PlyrCurrIds),a3
 		move.w	(Controller_1+on_press).l,d3
 		btst	#bitJoyC,d3
@@ -68,29 +72,35 @@ FmEd_Loop:
 		add.w	d0,d0
 		move.w	(a3,d0.w),d0
 		bsr	SndTest_PlaySound
-
 .noc:
+		move.w	(Controller_1+on_press).l,d3
+		btst	#bitJoyStart,d3
+		beq.s	.nost
+		moveq	#2,d0
+		move.w	(RAM_CurrTrack),d1
+		bsr	Sound_StopTrack
+.nost:
+
+		move.w	(Controller_1+on_hold).l,d3
+		btst	#bitJoyB,d3
+		bne.s	.on_b_hold
+
+	; UP DOWN LEFT RIGHT
+		lea	(RAM_CurrSelect),a3
 		move.w	(Controller_1+on_press).l,d3
 		btst	#bitJoyRight,d3
 		beq.s	.nor
-		move.w	(RAM_CurrTrack),d0
-		add.w	d0,d0
-		cmp.w	#VAR_MAXSONGS,(a3,d0.w)
-		beq.s	.nor
-		add.w	#1,(a3,d0.w)
+		add.w	#1,(a3)
+		and.w	#1,(a3)
 		bsr	SndTest_Update
 .nor:
 		move.w	(Controller_1+on_press).l,d3
 		btst	#bitJoyLeft,d3
 		beq.s	.nol
-		move.w	(RAM_CurrTrack),d0
-		add.w	d0,d0
-		tst.w	(a3,d0.w)
-		beq.s	.nol
-		sub.w	#1,(a3,d0.w)
+		sub.w	#1,(a3)
+		and.w	#1,(a3)
 		bsr	SndTest_Update
 .nol:
-		
 		lea	(RAM_CurrTrack),a3
 		move.w	(Controller_1+on_press).l,d3
 		btst	#bitJoyUp,d3
@@ -109,13 +119,56 @@ FmEd_Loop:
 		bsr	SndTest_Update
 .nod:
 
+		bra	FmEd_Loop
+		
+		
+; B HOLD
+; a3 - list
+.on_b_hold:
+		lea	(RAM_PlyrCurrIds),a3
+		tst.w	(RAM_CurrSelect)
+		beq.s	.no_ids_pick
+		lea	(RAM_PlyrCurrVol),a3
+.no_ids_pick:
 		move.w	(Controller_1+on_press).l,d3
-		btst	#bitJoyStart,d3
-		beq.s	.nost
-		moveq	#2,d0
-		move.w	(RAM_CurrTrack),d1
-		bsr	Sound_StopTrack
-.nost:
+		btst	#bitJoyRight,d3
+		beq.s	.nor2
+		move.w	(RAM_CurrTrack),d0
+		add.w	d0,d0
+		add.w	#1,(a3,d0.w)
+		bsr	SndTest_Update	
+.nor2:
+		move.w	(Controller_1+on_press).l,d3
+		btst	#bitJoyLeft,d3
+		beq.s	.nol2
+		move.w	(RAM_CurrTrack),d0
+		add.w	d0,d0
+		sub.w	#1,(a3,d0.w)
+		bsr	SndTest_Update	
+.nol2:
+
+; 		move.w	(Controller_1+on_press).l,d3
+; 		lea	(RAM_PlyrCurrIds),a3
+; 
+; 		btst	#bitJoyRight,d3
+; 		beq.s	.nor2
+; 		move.w	(RAM_CurrTrack),d0
+; 		add.w	d0,d0
+; 		cmp.w	#VAR_MAXSONGS,(a3,d0.w)
+; 		beq.s	.nor2
+; 		add.w	#1,(a3,d0.w)
+; 		bsr	SndTest_Update
+; .nor2:
+; 		move.w	(Controller_1+on_press).l,d3
+; 		btst	#bitJoyLeft,d3
+; 		beq.s	.nol2
+; 		move.w	(RAM_CurrTrack),d0
+; 		add.w	d0,d0
+; 		tst.w	(a3,d0.w)
+; 		beq.s	.nol2
+; 		sub.w	#1,(a3,d0.w)
+; 		bsr	SndTest_Update
+; .nol2:
 
 		bra	FmEd_Loop
 		
@@ -135,12 +188,13 @@ MD_VBlank:
 SndTest_Update:
 		lea	(RAM_PlyrCurrIds),a2
 		move.l	#locate(0,11,9),d0
-
 		moveq	#1,d3
 .nextone:
 		swap	d3
 		move.w	#"0",d1
 		cmp.w	(RAM_CurrTrack),d3
+		bne.s	.noequltr
+		tst.w	(RAM_CurrSelect)
 		bne.s	.noequltr
 		add.w	#$2000,d1
 .noequltr:
@@ -150,15 +204,42 @@ SndTest_Update:
 		add.w	#1,d3
 		swap	d3
 		dbf	d3,.nextone
+		
+		lea	(RAM_PlyrCurrVol),a2
+		move.l	#locate(0,19,9),d0
+		moveq	#1,d3
+.nextone2:
+		swap	d3
+		move.w	#"0",d1
+		cmp.w	(RAM_CurrTrack),d3
+		bne.s	.noequltr2
+		tst.w	(RAM_CurrSelect)
+		beq.s	.noequltr2
+		add.w	#$2000,d1
+.noequltr2:
+		move.w	(a2)+,d2
+		bsr	ShowVal_custom
+		add.l	#$000002,d0
+		add.w	#1,d3
+		swap	d3
+		dbf	d3,.nextone2
+		
 		rts
 
 SndTest_PlaySound:
+		move.w	(RAM_CurrTrack),d3
+		move.w	d3,d4
+		add.w	d4,d4
+		moveq	#0,d2
+		lea	(RAM_PlyrCurrVol),a0
+		move.w	(a0,d4.w),d2
+		ror.l	#8,d2
 		lea	list_TrackData(pc),a0
 		lsl.w	#4,d0
 		adda	d0,a0
 		move.l	(a0)+,d0
 		move.l	(a0)+,d1
-		move.l	(a0)+,d2
+		or.l	(a0)+,d2
 		move.w	(RAM_CurrTrack),d3
 		bra	Sound_SetTrack
 

@@ -331,6 +331,10 @@ SndDrv_Init:
 		ld	(Zpsg_ctrl),a	
 		ld	a,0FFh
 		ld	(Zpsg_ctrl),a
+		
+	; Set LOW priority to the BGM track buffer
+		ld	a,1
+		ld	(SndBuff_Track_2+trck_Priority),a
 		ret
 
 ; ===================================================================
@@ -1368,7 +1372,119 @@ SndDrv_ReadTrack:
 		and	11b
 		or	30h
 		ld	d,a
-		ld	b,1Ch/4
+		
+	; 30h registers
+		ld	e,(hl)
+		inc 	hl
+		call	SndDrv_FmAutoSet
+		inc 	d
+		inc 	d
+		inc 	d
+		inc 	d
+		ld	e,(hl)
+		inc 	hl
+		call	SndDrv_FmAutoSet
+		inc 	d
+		inc 	d
+		inc 	d
+		inc 	d
+		ld	e,(hl)
+		inc 	hl
+		call	SndDrv_FmAutoSet
+		inc 	d
+		inc 	d
+		inc 	d
+		inc 	d
+		ld	e,(hl)
+		inc 	hl
+		call	SndDrv_FmAutoSet
+		inc 	d
+		inc 	d
+		inc 	d
+		inc 	d
+		
+	; 40h regs, volume checks
+		ld	c,(ix+chnl_FmVolBase)
+		ld	a,(ix+chnl_FmRegB0)
+		and	111b
+		ld	b,a
+
+	; b - FmRegB0
+	; c - FmVolBase
+		ld	e,(hl)
+		inc 	hl
+		ld	a,b
+		cp	7
+		jp	nz,.tlv_lv1
+		ld	a,e
+		add 	a,c
+		ld	e,a
+		or	a
+		jp	p,.tlv_lv1
+		ld	e,7Fh
+.tlv_lv1:
+		call	SndDrv_FmAutoSet
+		inc 	d
+		inc 	d
+		inc 	d
+		inc 	d
+		ld	e,(hl)
+		ld	a,b
+		cp	7
+		jp	z,.tlv_lv2_ok
+		cp	6
+		jp	z,.tlv_lv2_ok
+		cp	5
+		jp	nz,.tlv_lv2
+.tlv_lv2_ok:
+		ld	a,e
+		add 	a,c
+		ld	e,a
+		or	a
+		jp	p,.tlv_lv2
+		ld	e,7Fh
+.tlv_lv2:
+		call	SndDrv_FmAutoSet
+		inc 	hl
+		inc 	d
+		inc 	d
+		inc 	d
+		inc 	d
+		ld	e,(hl)
+		ld	a,b
+		and	100b
+		or	a
+		jp	z,.tlv_lv3
+		ld	a,e
+		add 	a,c
+		ld	e,a
+		or	a
+		jp	p,.tlv_lv3
+		ld	a,7Fh
+.tlv_lv3:
+		call	SndDrv_FmAutoSet
+		inc 	hl
+		inc 	d
+		inc 	d
+		inc 	d
+		inc 	d
+
+		ld	a,(hl)
+		add 	a,c
+		or	a
+		jp	p,.tlv_lv4
+		ld	a,7Fh
+.tlv_lv4:
+		ld	e,a
+		inc 	hl
+		call	SndDrv_FmAutoSet
+		inc 	d
+		inc 	d
+		inc 	d
+		inc 	d
+
+	; 50h - 90h
+		ld	b,14h/4
 .fmfiles:
 		ld	e,(hl)
 		inc 	hl
@@ -1399,7 +1515,8 @@ SndDrv_ReadTrack:
 		inc 	d
 		inc 	d
 		djnz	.fmfiles
-
+		
+		ld	c,(ix+chnl_Chip)
 		ld	d,0B0h
 		ld	a,c
 		and	11b
@@ -1554,6 +1671,7 @@ SndDrv_ReadTrack:
 		inc 	hl
 		inc 	hl
 		ld	a,b
+		add	a,(iy+trck_Volume)
 		cp	40h
 		jp	c,.too_much
 		ld	a,40h
@@ -1683,6 +1801,7 @@ SndDrv_ReadTrack:
 ; --------------------------------------------
 
 .set_psg_vol:
+		add	a,(iy+trck_Volume)
 		ld	e,0
 		cp	40h
 		jp	c,.pntoo_much
@@ -1701,7 +1820,9 @@ SndDrv_ReadTrack:
 		and	00001111b
 		ld	e,a
 .pntoppsgv:
-		ld	(ix+chnl_PsgVolBase),e
+		ld	a,e
+		and	00001111b
+		ld	(ix+chnl_PsgVolBase),a
 		ret
 
 ; --------------------------------------------
@@ -2421,19 +2542,16 @@ trck_TicksMain 	equ 1Ch
 trck_TempoBits	equ 1Dh
 trck_RowWait	equ 1Eh
 trck_TicksCurr	equ 1Fh
+trck_Volume	equ 20h
 
 ; ----------------------------------------------------
 ; Track buffer
 ; ----------------------------------------------------
 
 SndBuff_Track_1:
-		ds 10h		; Request list
-		db 0		; Priority
-		ds 0Fh		; Main track
+		ds 40h		; Request list
 SndBuff_Track_2:
-		ds 10h
-		db 1
-		ds 0Fh
+		ds 40h
 
 ; ----------------------------------------------------
 ; Tracker note buffers

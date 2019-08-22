@@ -46,7 +46,7 @@ Sound_Init:
 ; Input:
 ; d0 | LONG - Track blocks (Z80 WORD) | Track pattern (Z80 WORD)
 ; d1 | LONG - Track instruments (Z80 WORD) | ROM bank 
-; d2 | LONG - 00 | Start Block | Tempo bits | Ticks
+; d2 | LONG - Volume | Start Block | Tempo bits | Ticks
 ; d3 | WORD - Slot
 ; --------------------------------------------------------
 
@@ -84,6 +84,8 @@ Sound_SetTrack:
 		move.b	d4,trck_ReqTempo(a4)		; Tempo
 		lsr.l	#8,d4
 		move.b	d4,trck_ReqCurrBlk(a4)		; Block start
+		lsr.l	#8,d4
+		move.b	d4,trck_Volume(a4)		; Volume
 
 		move.w	#1,d4
 		move.b	d4,trck_ReqFlag(a4)		; Request $01, set and play song
